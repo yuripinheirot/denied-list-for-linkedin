@@ -6,6 +6,7 @@ const blackListPattern = new RegExp(blackList.join('|'), 'i')
 const removeJob = (element: Element) => {
   if (element instanceof HTMLLIElement) {
     element.remove()
+    // @ts-ignore
     console.log('Removed job: ', element.innerText.replaceAll('\n', ''))
   }
 }
@@ -79,3 +80,13 @@ const executeFilter = async () => {
 }
 
 executeFilter()
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // listen for messages sent from background.js
+  if (
+    request.message === 'urlChanged' &&
+    request.url?.includes('https://www.linkedin.com/jobs/search')
+  ) {
+    executeFilter()
+  }
+})

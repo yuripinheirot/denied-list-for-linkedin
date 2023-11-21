@@ -43,6 +43,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.252",
     "ts-loader": "^9.5.1",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4",
