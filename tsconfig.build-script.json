@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/",
+    "isolatedModules": false,
+    "module": "es6",
+    "noEmit": false,
+    "target": "ES2022",
+    "resolveJsonModule": false,
+    "allowJs": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src/scripts/executeFilter.script.ts"],
+  "exclude": []
+}
