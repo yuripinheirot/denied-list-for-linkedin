@@ -5,6 +5,7 @@ import { BlackListType } from '../types/BlackList.type'
 export enum BlackListActions {
   UPDATE = 'update',
   DELETE = 'delete',
+  CREATE = 'create',
 }
 
 type BlackListAction = {
@@ -32,15 +33,30 @@ const actions: Record<
   (state: BlackListType[], payload: BlackListType) => BlackListType[]
 > = {
   update: (state, payload) => {
-    return state.map((item) => {
-      if (item.id === payload.id) {
-        return payload
-      }
-      return item
-    })
+    const index = state.findIndex((item) => item.id === payload.id)
+    if (index === -1) {
+      return state
+    }
+
+    const newState = [...state]
+    newState[index] = payload
+
+    return newState
   },
   delete: (state, payload) => {
-    return state.filter((item) => item.id !== payload.id)
+    const index = state.findIndex((item) => item.id === payload.id)
+    if (index === -1) {
+      return state
+    }
+
+    const newState = [...state]
+    newState.splice(index, 1)
+
+    return newState
+  },
+  create: (state, payload) => {
+    const newFilter = { ...payload, id: Date.now().toString() }
+    return [...state, newFilter]
   },
 }
 
