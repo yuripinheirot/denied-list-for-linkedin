@@ -12,7 +12,7 @@
   },
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": ["content.js", "repositoryListener.js"],
       "matches": ["https://www.linkedin.com/jobs/search/*"],
       "run_at": "document_idle"
     }

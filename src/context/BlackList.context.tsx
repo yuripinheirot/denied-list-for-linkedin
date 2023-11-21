@@ -1,6 +1,7 @@
 import { createContext, useReducer, useMemo } from 'react'
 import { blackList } from '../data/Filters.data'
 import { BlackListType } from '../types/BlackList.type'
+import { setItemLocalStorage } from '../repository/chromeEvents.repository'
 
 export enum BlackListActions {
   UPDATE = 'update',
@@ -56,6 +57,7 @@ const actions: Record<
   },
   create: (state, payload) => {
     const newFilter = { ...payload, id: Date.now().toString() }
+    setItemLocalStorage({ key: 'blackList', value: newFilter })
     return [...state, newFilter]
   },
 }
