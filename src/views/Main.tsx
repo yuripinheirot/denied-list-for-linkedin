@@ -33,6 +33,7 @@ export const MainView = () => {
     confirm({
       title: 'Deseja realmente deletar este filtro?',
       icon: <ExclamationCircleFilled />,
+      closable: true,
       content: data.description,
       onOk: async () => {
         await deleteFilter(data)
@@ -46,6 +47,7 @@ export const MainView = () => {
       footer: null,
       closable: true,
       maskClosable: true,
+      title: 'Novo filtro',
       content: (
         <Form
           layout='vertical'
@@ -54,11 +56,9 @@ export const MainView = () => {
             destroyAll()
           }}
         >
-          <Typography.Title level={5}>
-            Adicione uma descrição para seu filtro
-          </Typography.Title>
           <Form.Item<string>
             name='description'
+            label='Insira uma descrição'
             rules={[
               { required: true, message: 'Por favor, insira uma descrição!' },
             ]}
@@ -72,9 +72,11 @@ export const MainView = () => {
               margin: 0,
             }}
           >
+            <Button onClick={() => destroyAll()}>Cancelar</Button>
             <Button
               type='primary'
               htmlType='submit'
+              style={{ marginLeft: 8 }}
             >
               Salvar
             </Button>
@@ -92,6 +94,7 @@ export const MainView = () => {
         height: 500,
         padding: 20,
         backgroundColor: '#fff',
+        overflowY: 'auto',
       }}
       gap={20}
     >
