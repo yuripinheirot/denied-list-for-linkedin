@@ -1,5 +1,6 @@
 import { BlackListType } from '../types/BlackList.type'
 import { KeysStorage } from '../types/KeysStorage.type'
+import { insertHideButtons } from './createHideButton.script'
 
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
 const jobListItemSelector = `${jobListSelector} > li`
@@ -101,5 +102,6 @@ const addJobListObserver = () => {
 export const executeFilter = async () => {
   await new Promise((resolve) => setTimeout(resolve, 2000))
   console.log('Linkedin Filter extension running...')
+  insertHideButtons()
   addJobListObserver()
 }
