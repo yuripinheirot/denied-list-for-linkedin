@@ -1,3 +1,6 @@
+import { BlackListType } from '../types/BlackList.type'
+import { KeysStorage } from '../types/KeysStorage.type'
+
 const createHideButton = () => {
   const divElement = document.createElement('div')
   divElement.style.textAlign = 'right'
@@ -12,8 +15,35 @@ const createHideButton = () => {
   hideButton.style.border = '1px solid black'
   hideButton.style.borderRadius = '5px'
 
-  hideButton.addEventListener('click', () => {
-    alert('clicou')
+  hideButton.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+
+    const parentElement = target.parentElement?.parentElement
+
+    if (parentElement) {
+      const company = parentElement.innerText.split('\n')[1]
+
+      if (company) {
+        const blackList = localStorage.getItem(KeysStorage.BLACKLIST) as string
+        const blackListParsed = JSON.parse(blackList) as BlackListType[]
+
+        const newFilter: BlackListType = {
+          id: Date.now().toString(),
+          description: company,
+        }
+
+        blackListParsed.push(newFilter)
+
+        localStorage.setItem(
+          KeysStorage.BLACKLIST,
+          JSON.stringify(blackListParsed)
+        )
+      }
+    }
+
+    chrome.runtime.sendMessage({
+      message: 'executeFilter',
+    })
   })
 
   divElement.appendChild(hideButton)

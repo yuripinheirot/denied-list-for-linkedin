@@ -69,6 +69,7 @@ const addJobListObserver = () => {
   for (const children of jobList.childNodes) {
     if (children instanceof HTMLLIElement) {
       addJobItemListener(children)
+      insertHideButtons()
     }
   }
 
