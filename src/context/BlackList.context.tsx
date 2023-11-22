@@ -1,10 +1,10 @@
 import { createContext, useEffect, useState } from 'react'
+
 import {
   getItemLocalStorage,
   setItemLocalStorage,
 } from '../repository/chromeEvents.repository'
 import { BlackListType } from '../types/BlackList.type'
-
 import { FiltersProviderProps } from './types/BlackListContext.type'
 
 const keyStorage = 'blackList'
@@ -16,13 +16,20 @@ export const BlackListContext = createContext<{
     delete: (payload: BlackListType) => Promise<void>
     create: (payload: BlackListType) => Promise<void>
   }
-}>({} as any)
+}>({
+  blackListStore: [],
+  blackListActions: {
+    update: async () => {},
+    delete: async () => {},
+    create: async () => {},
+  },
+})
 
 export const BlackListProvider = ({ children }: FiltersProviderProps) => {
   const [blackListStore, setBlackListStore] = useState<BlackListType[]>([])
 
   const loadStore = async () => {
-    const data = await getItemLocalStorage(keyStorage)
+    const data = await getItemLocalStorage<BlackListType[]>(keyStorage)
     setBlackListStore(data)
   }
 

@@ -3,6 +3,7 @@ import { BlackListType } from '../types/BlackList.type'
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
 const jobListItemSelector = `${jobListSelector} > li`
 const blackList = localStorage.getItem('blackList')
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const blackListParsed: BlackListType[] = blackList ? JSON.parse(blackList) : []
 const blackListPattern = new RegExp(
   blackListParsed.map((b) => b.description.toLowerCase()).join('|'),
@@ -86,12 +87,14 @@ const executeFilter = async () => {
 
 executeFilter()
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // listen for messages sent from background.js
-  if (
-    request.message === 'urlChanged' &&
-    request.url?.includes('https://www.linkedin.com/jobs/search')
-  ) {
-    executeFilter()
+chrome.runtime.onMessage.addListener(
+  (request: { message: string; url?: string }) => {
+    // listen for messages sent from background.js
+    if (
+      request.message === 'urlChanged' &&
+      request.url?.includes('https://www.linkedin.com/jobs/search')
+    ) {
+      executeFilter()
+    }
   }
-})
+)

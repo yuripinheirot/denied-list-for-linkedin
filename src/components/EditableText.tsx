@@ -1,12 +1,16 @@
+/* eslint-disable indent */
 import { useState } from 'react'
-import { BlackListType } from '../types/BlackList.type'
-import { Button, Input, List, Tooltip } from 'antd'
+
 import { EditFilled, DeleteFilled } from '@ant-design/icons'
+
+import { Button, Input, List, Tooltip } from 'antd'
+
+import { BlackListType } from '../types/BlackList.type'
 
 type Props = {
   data: BlackListType
   initOpened?: boolean
-  saveChanges: (data: BlackListType) => void
+  saveChanges: (data: BlackListType) => Promise<void>
   openModal: (data: BlackListType) => void
 }
 
@@ -36,6 +40,7 @@ export const EditableText = ({
   const actions = [
     <Button
       type='primary'
+      key='btnSave'
       size='small'
       onClick={handleSaveChanges}
     >
@@ -43,6 +48,7 @@ export const EditableText = ({
     </Button>,
     <Button
       type='primary'
+      key='btnCancel'
       danger
       size='small'
       onClick={cancelChanges}
@@ -57,14 +63,20 @@ export const EditableText = ({
         opened
           ? actions
           : [
-              <Tooltip title='Deletar'>
+              <Tooltip
+                title='Deletar'
+                key='tooltipDelete'
+              >
                 <Button
                   size='small'
                   onClick={handleOpenModal}
                   icon={<DeleteFilled />}
                 />
               </Tooltip>,
-              <Tooltip title='Editar'>
+              <Tooltip
+                title='Editar'
+                key='tooltipDelete'
+              >
                 <Button
                   size='small'
                   onClick={() => setOpened(true)}

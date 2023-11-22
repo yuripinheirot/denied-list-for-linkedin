@@ -1,0 +1,62 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "eslint-plugin-import-helpers",
+    "@typescript-eslint",
+    "import"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-unsafe-call": "warn",
+    "@typescript-eslint/no-unsafe-argument": "warn",
+    "@typescript-eslint/no-explicit-any": "off",
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "react/jsx-max-props-per-line": ["error", { "maximum": 1 }],
+    "import/prefer-default-export": "off",
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": [
+          "/^react/",
+          "absolute",
+          "/^@/",
+          "module",
+          ["parent", "sibling", "index"]
+        ],
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
+      }
+    ]
+  }
+}

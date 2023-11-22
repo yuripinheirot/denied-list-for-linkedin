@@ -1,4 +1,7 @@
+import { useContext } from 'react'
+
 import { ExclamationCircleFilled, PlusSquareFilled } from '@ant-design/icons'
+
 import {
   Button,
   Flex,
@@ -10,7 +13,7 @@ import {
   Typography,
 } from 'antd'
 import Title from 'antd/es/typography/Title'
-import { useContext } from 'react'
+
 import { EditableText } from '../components/EditableText'
 import { BlackListContext } from '../context/BlackList.context'
 import { BlackListType } from '../types/BlackList.type'
@@ -19,12 +22,12 @@ const { info, confirm, destroyAll } = Modal
 export const MainView = () => {
   const { blackListActions, blackListStore } = useContext(BlackListContext)
 
-  const saveChangesEditableText = async (data: BlackListType) => {
-    await blackListActions.update(data)
+  const saveChangesEditableText = (data: BlackListType) => {
+    return blackListActions.update(data)
   }
 
-  const deleteFilter = async (data: BlackListType) => {
-    await blackListActions.delete(data)
+  const deleteFilter = (data: BlackListType) => {
+    return blackListActions.delete(data)
   }
 
   const handleDeleteModal = (data: BlackListType) => {
@@ -32,8 +35,8 @@ export const MainView = () => {
       title: 'Deseja realmente deletar este filtro?',
       icon: <ExclamationCircleFilled />,
       content: data.description,
-      onOk() {
-        deleteFilter(data)
+      onOk: async () => {
+        await deleteFilter(data)
       },
     })
   }
@@ -47,8 +50,8 @@ export const MainView = () => {
       content: (
         <Form
           layout='vertical'
-          onFinish={async (payload) => {
-            await blackListActions.create(payload)
+          onFinish={(payload: BlackListType) => {
+            blackListActions.create(payload)
             destroyAll()
           }}
         >
@@ -107,7 +110,7 @@ export const MainView = () => {
         renderItem={(item) => (
           <EditableText
             data={item}
-            saveChanges={saveChangesEditableText}
+            saveChanges={(data) => saveChangesEditableText(data)}
             openModal={handleDeleteModal}
           />
         )}
