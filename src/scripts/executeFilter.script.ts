@@ -3,7 +3,6 @@ import { KeysStorage } from '../types/KeysStorage.type'
 import { insertHideButtons } from './createHideButton.script'
 
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
-const jobListItemSelector = `${jobListSelector} > li`
 
 const escapeRegExp = (value: string) => {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -36,16 +35,6 @@ const removeJob = (element: Element) => {
   }
 }
 
-const removeJobsFromJobList = () => {
-  const jobsItens = document.querySelectorAll(jobListItemSelector)
-
-  for (const jobItem of jobsItens) {
-    if (jobItem instanceof HTMLLIElement && isJobBlacklisted(jobItem)) {
-      removeJob(jobItem)
-    }
-  }
-}
-
 const isJobBlacklisted = (element: HTMLElement) => {
   return blackListPattern().test(element.innerText.toLowerCase())
 }
@@ -64,7 +53,6 @@ const addJobItemListener = (jobItem: HTMLLIElement) => {
 
   observer.observe(jobItem, {
     childList: true,
-    characterData: true,
     attributes: true,
   })
 
@@ -77,14 +65,14 @@ const addJobListObserver = () => {
   const jobList = document.querySelector(jobListSelector)
   if (!jobList) return
 
-  removeJobsFromJobList()
-
+  // for loaded jobs
   for (const children of jobList.childNodes) {
     if (children instanceof HTMLLIElement) {
       addJobItemListener(children)
     }
   }
 
+  // for unloaded jobs
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (
@@ -92,6 +80,7 @@ const addJobListObserver = () => {
         mutation.addedNodes[0] instanceof HTMLLIElement
       ) {
         addJobItemListener(mutation.addedNodes[0])
+        insertHideButtons()
       }
     }
   })
@@ -99,9 +88,6 @@ const addJobListObserver = () => {
   observer.observe(jobList, { childList: true, attributes: true })
 }
 
-export const executeFilter = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
-  console.log('Linkedin Filter extension running...')
-  insertHideButtons()
+export const executeFilter = () => {
   addJobListObserver()
 }
