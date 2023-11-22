@@ -12,7 +12,6 @@ import {
   Tooltip,
   Typography,
 } from 'antd'
-import Title from 'antd/es/typography/Title'
 
 import { EditableText } from '../components/EditableText'
 import { BlackListContext } from '../context/BlackList.context'
@@ -88,13 +87,19 @@ export const MainView = () => {
   return (
     <Flex
       vertical
-      style={{ width: 500, height: 700, padding: 20 }}
+      style={{
+        width: 400,
+        height: 500,
+        padding: 20,
+        backgroundColor: '#fff',
+      }}
+      gap={20}
     >
       <Flex
         justify='space-between'
         align='center'
       >
-        <Title>Filtros</Title>
+        <Typography.Title style={{ margin: 0 }}>Filtros</Typography.Title>
         <Tooltip title='Novo'>
           <Button
             icon={<PlusSquareFilled />}
