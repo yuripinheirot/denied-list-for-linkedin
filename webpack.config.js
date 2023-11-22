@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
   mode: 'production',
-  entry: './src/scripts/executeFilter.script.ts',
+  entry: './src/scripts/index.ts',
   module: {
     rules: [
       {

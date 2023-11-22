@@ -46,7 +46,6 @@ const removeJobsFromJobList = () => {
 }
 
 const isJobBlacklisted = (element: HTMLElement) => {
-  console.log({ blackListPattern: blackListPattern() })
   return blackListPattern().test(element.innerText.toLowerCase())
 }
 
@@ -99,22 +98,8 @@ const addJobListObserver = () => {
   observer.observe(jobList, { childList: true, attributes: true })
 }
 
-const executeFilter = async () => {
+export const executeFilter = async () => {
   await new Promise((resolve) => setTimeout(resolve, 2000))
   console.log('Linkedin Filter extension running...')
   addJobListObserver()
 }
-
-executeFilter()
-
-chrome.runtime.onMessage.addListener(
-  (request: { message: string; url?: string }) => {
-    // listen for messages sent from background.js
-    if (
-      request.message === 'urlChanged' &&
-      request.url?.includes('https://www.linkedin.com/jobs/search')
-    ) {
-      executeFilter()
-    }
-  }
-)

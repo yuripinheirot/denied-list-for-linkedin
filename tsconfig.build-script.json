@@ -10,6 +10,6 @@
     "allowJs": true,
     "moduleResolution": "node"
   },
-  "include": ["src/scripts/executeFilter.script.ts"],
+  "include": ["src/scripts/index.ts"],
   "exclude": []
 }
