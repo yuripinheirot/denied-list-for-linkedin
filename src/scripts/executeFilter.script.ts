@@ -4,6 +4,10 @@ import { KeysStorage } from '../types/KeysStorage.type'
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
 const jobListItemSelector = `${jobListSelector} > li`
 
+const escapeRegExp = (value: string) => {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 const blackListPattern = () => {
   const blackList = localStorage.getItem(KeysStorage.BLACKLIST)
   if (!blackList) {
@@ -12,8 +16,14 @@ const blackListPattern = () => {
 
   const blackListParsed = JSON.parse(blackList || '[]') as BlackListType[]
 
+  if (blackListParsed.length === 0) {
+    return new RegExp('$.^', 'i')
+  }
+
   return new RegExp(
-    blackListParsed.map((b) => b.description.toLowerCase()).join('|'),
+    blackListParsed
+      .map((b) => escapeRegExp(b.description.toLowerCase()))
+      .join('|'),
     'i'
   )
 }
