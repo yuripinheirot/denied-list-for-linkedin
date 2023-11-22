@@ -1,3 +1,4 @@
+import { ExclamationCircleFilled, PlusSquareFilled } from '@ant-design/icons'
 import {
   Button,
   Flex,
@@ -8,32 +9,22 @@ import {
   Tooltip,
   Typography,
 } from 'antd'
+import Title from 'antd/es/typography/Title'
 import { useContext } from 'react'
 import { EditableText } from '../components/EditableText'
-import { ExclamationCircleFilled, PlusSquareFilled } from '@ant-design/icons'
-import {
-  BlackListActions,
-  BlackListContext,
-} from '../context/BlackList.context'
+import { BlackListContext } from '../context/BlackList.context'
 import { BlackListType } from '../types/BlackList.type'
-import Title from 'antd/es/typography/Title'
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
-  const { state, dispatch } = useContext(BlackListContext)
+  const { blackListActions, blackListStore } = useContext(BlackListContext)
 
-  const saveChangesEditableText = (data: BlackListType) => {
-    dispatch({
-      type: BlackListActions.UPDATE,
-      payload: data,
-    })
+  const saveChangesEditableText = async (data: BlackListType) => {
+    await blackListActions.update(data)
   }
 
-  const deleteFilter = (data: BlackListType) => {
-    dispatch({
-      type: BlackListActions.DELETE,
-      payload: data,
-    })
+  const deleteFilter = async (data: BlackListType) => {
+    await blackListActions.delete(data)
   }
 
   const handleDeleteModal = (data: BlackListType) => {
@@ -56,11 +47,8 @@ export const MainView = () => {
       content: (
         <Form
           layout='vertical'
-          onFinish={(payload) => {
-            dispatch({
-              type: BlackListActions.CREATE,
-              payload,
-            })
+          onFinish={async (payload) => {
+            await blackListActions.create(payload)
             destroyAll()
           }}
         >
@@ -97,7 +85,7 @@ export const MainView = () => {
   return (
     <Flex
       vertical
-      style={{ width: 500, padding: 20 }}
+      style={{ width: 500, height: 700, padding: 20 }}
     >
       <Flex
         justify='space-between'
@@ -115,7 +103,7 @@ export const MainView = () => {
       </Flex>
       <List
         itemLayout='horizontal'
-        dataSource={state}
+        dataSource={blackListStore}
         renderItem={(item) => (
           <EditableText
             data={item}

@@ -3,8 +3,8 @@ type setItemModel = {
   value: any
 }
 
-export const getItemLocalStorage = async <T = undefined>(key: string) => {
-  return new Promise<T | undefined>((resolve) => {
+export const getItemLocalStorage = async <T = any>(key: string) => {
+  return new Promise<T>((resolve) => {
     chrome.tabs.query(
       { active: true, currentWindow: true },
       (tabs: chrome.tabs.Tab[]) => {
@@ -14,7 +14,7 @@ export const getItemLocalStorage = async <T = undefined>(key: string) => {
             action: 'get',
             key,
           },
-          (response: T | undefined) => {
+          (response: T) => {
             resolve(response)
           }
         )
@@ -27,7 +27,6 @@ export const setItemLocalStorage = (payload: setItemModel) => {
   chrome.tabs.query(
     { active: true, currentWindow: true },
     (tabs: chrome.tabs.Tab[]) => {
-      console.log('enviou mensagem')
       void chrome.tabs.sendMessage(tabs[0].id as number, {
         action: 'set',
         ...payload,

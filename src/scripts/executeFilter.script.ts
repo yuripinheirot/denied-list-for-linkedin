@@ -1,12 +1,17 @@
+import { BlackListType } from '../types/BlackList.type'
+
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
 const jobListItemSelector = `${jobListSelector} > li`
-const blackList = ['GeekHunter', 'Turing', 'Crossover', 'Netvagas']
-const blackListPattern = new RegExp(blackList.join('|'), 'i')
+const blackList = localStorage.getItem('blackList')
+const blackListParsed: BlackListType[] = blackList ? JSON.parse(blackList) : []
+const blackListPattern = new RegExp(
+  blackListParsed.map((b) => b.description.toLowerCase()).join('|'),
+  'i'
+)
 
 const removeJob = (element: Element) => {
   if (element instanceof HTMLLIElement) {
     element.remove()
-    // @ts-ignore
     console.log('Removed job: ', element.innerText.replaceAll('\n', ''))
   }
 }
@@ -22,7 +27,7 @@ const removeJobsFromJobList = () => {
 }
 
 const isJobBlacklisted = (element: HTMLElement) =>
-  blackListPattern.test(element.innerText)
+  blackListPattern.test(element.innerText.toLowerCase())
 
 const addJobItemListener = (jobItem: HTMLLIElement) => {
   const observer = new MutationObserver((mutations) => {

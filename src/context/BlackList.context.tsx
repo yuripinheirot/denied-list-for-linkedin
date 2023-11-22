@@ -1,80 +1,73 @@
-import { createContext, useReducer, useMemo } from 'react'
-import { blackList } from '../data/Filters.data'
+import { createContext, useEffect, useState } from 'react'
+import {
+  getItemLocalStorage,
+  setItemLocalStorage,
+} from '../repository/chromeEvents.repository'
 import { BlackListType } from '../types/BlackList.type'
-import { setItemLocalStorage } from '../repository/chromeEvents.repository'
 
-export enum BlackListActions {
-  UPDATE = 'update',
-  DELETE = 'delete',
-  CREATE = 'create',
-}
+import { FiltersProviderProps } from './types/BlackListContext.type'
 
-type BlackListAction = {
-  type: BlackListActions
-  payload: BlackListType
-}
+const keyStorage = 'blackList'
 
-type BlackListContextType = {
-  state: BlackListType[]
-  dispatch: React.Dispatch<BlackListAction>
-}
-
-type FiltersProviderProps = {
-  children: React.ReactNode
-}
-
-const initialState: BlackListType[] = blackList
-
-export const BlackListContext = createContext<BlackListContextType>(
-  {} as BlackListContextType
-)
-
-const actions: Record<
-  BlackListActions,
-  (state: BlackListType[], payload: BlackListType) => BlackListType[]
-> = {
-  update: (state, payload) => {
-    const index = state.findIndex((item) => item.id === payload.id)
-    if (index === -1) {
-      return state
-    }
-
-    const newState = [...state]
-    newState[index] = payload
-
-    return newState
-  },
-  delete: (state, payload) => {
-    const index = state.findIndex((item) => item.id === payload.id)
-    if (index === -1) {
-      return state
-    }
-
-    const newState = [...state]
-    newState.splice(index, 1)
-
-    return newState
-  },
-  create: (state, payload) => {
-    const newFilter = { ...payload, id: Date.now().toString() }
-    setItemLocalStorage({ key: 'blackList', value: newFilter })
-    return [...state, newFilter]
-  },
-}
-
-function reducer(
-  state: BlackListType[],
-  action: BlackListAction
-): BlackListType[] {
-  return actions[action.type](state, action.payload)
-}
+export const BlackListContext = createContext<{
+  blackListStore: BlackListType[]
+  blackListActions: {
+    update: (payload: BlackListType) => Promise<void>
+    delete: (payload: BlackListType) => Promise<void>
+    create: (payload: BlackListType) => Promise<void>
+  }
+}>({} as any)
 
 export const BlackListProvider = ({ children }: FiltersProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch])
+  const [blackListStore, setBlackListStore] = useState<BlackListType[]>([])
+
+  const loadStore = async () => {
+    const data = await getItemLocalStorage(keyStorage)
+    setBlackListStore(data)
+  }
+
+  const actions = {
+    update: async (payload: BlackListType): Promise<void> => {
+      const index = blackListStore.findIndex((item) => item.id === payload.id)
+      if (index === -1) {
+        return
+      }
+
+      const newState = [...blackListStore]
+      newState[index] = payload
+
+      setItemLocalStorage({ key: keyStorage, value: newState })
+      await loadStore()
+    },
+    delete: async (payload: BlackListType): Promise<void> => {
+      const index = blackListStore.findIndex((item) => item.id === payload.id)
+      if (index === -1) {
+        return
+      }
+
+      const newState = [...blackListStore]
+      newState.splice(index, 1)
+
+      setItemLocalStorage({ key: keyStorage, value: newState })
+      await loadStore()
+    },
+    create: async (payload: BlackListType): Promise<void> => {
+      const newFilter = { ...payload, id: Date.now().toString() }
+      const newState = [...blackListStore, newFilter]
+
+      setItemLocalStorage({ key: keyStorage, value: newState })
+      await loadStore()
+    },
+  }
+
+  useEffect(() => {
+    loadStore()
+  }, [])
 
   return (
-    <BlackListContext.Provider value={contextValue}>
+    <BlackListContext.Provider
+      value={{ blackListStore, blackListActions: actions }}
+    >
       {children}
     </BlackListContext.Provider>
   )
