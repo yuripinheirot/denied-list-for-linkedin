@@ -15,29 +15,45 @@ const createHideButton = () => {
   hideButton.style.border = '1px solid black'
   hideButton.style.borderRadius = '5px'
 
-  hideButton.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement
+  const getGrandParentElement = (element: HTMLElement) => {
+    return element.parentElement?.parentElement || null
+  }
 
-    const parentElement = target.parentElement?.parentElement
+  const extractCompanyFromElement = (element: HTMLElement) => {
+    return element.innerText.split('\n')[1] || null
+  }
+
+  const addToBlacklist = (company: string) => {
+    try {
+      const blackList = localStorage.getItem(KeysStorage.BLACKLIST)
+      const blackListParsed = blackList
+        ? (JSON.parse(blackList) as BlackListType[])
+        : []
+
+      const newFilter = {
+        id: Date.now().toString(),
+        description: company,
+      }
+
+      blackListParsed.push(newFilter)
+
+      localStorage.setItem(
+        KeysStorage.BLACKLIST,
+        JSON.stringify(blackListParsed)
+      )
+    } catch (error) {
+      console.error('Error updating blacklist:', error)
+    }
+  }
+
+  hideButton.addEventListener('click', (e) => {
+    const parentElement = getGrandParentElement(e.target as HTMLElement)
 
     if (parentElement) {
-      const company = parentElement.innerText.split('\n')[1]
+      const company = extractCompanyFromElement(parentElement)
 
       if (company) {
-        const blackList = localStorage.getItem(KeysStorage.BLACKLIST) as string
-        const blackListParsed = JSON.parse(blackList) as BlackListType[]
-
-        const newFilter: BlackListType = {
-          id: Date.now().toString(),
-          description: company,
-        }
-
-        blackListParsed.push(newFilter)
-
-        localStorage.setItem(
-          KeysStorage.BLACKLIST,
-          JSON.stringify(blackListParsed)
-        )
+        addToBlacklist(company)
       }
     }
 
