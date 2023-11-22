@@ -1,14 +1,22 @@
 import { BlackListType } from '../types/BlackList.type'
+import { KeysStorage } from '../types/KeysStorage.type'
 
 const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
 const jobListItemSelector = `${jobListSelector} > li`
-const blackList = localStorage.getItem('blackList')
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const blackListParsed: BlackListType[] = blackList ? JSON.parse(blackList) : []
-const blackListPattern = new RegExp(
-  blackListParsed.map((b) => b.description.toLowerCase()).join('|'),
-  'i'
-)
+
+const blackListPattern = () => {
+  const blackList = localStorage.getItem(KeysStorage.BLACKLIST)
+  if (!blackList) {
+    localStorage.setItem(KeysStorage.BLACKLIST, JSON.stringify([]))
+  }
+
+  const blackListParsed = JSON.parse(blackList || '[]') as BlackListType[]
+
+  return new RegExp(
+    blackListParsed.map((b) => b.description.toLowerCase()).join('|'),
+    'i'
+  )
+}
 
 const removeJob = (element: Element) => {
   if (element instanceof HTMLLIElement) {
@@ -27,8 +35,10 @@ const removeJobsFromJobList = () => {
   }
 }
 
-const isJobBlacklisted = (element: HTMLElement) =>
-  blackListPattern.test(element.innerText.toLowerCase())
+const isJobBlacklisted = (element: HTMLElement) => {
+  console.log({ blackListPattern: blackListPattern() })
+  return blackListPattern().test(element.innerText.toLowerCase())
+}
 
 const addJobItemListener = (jobItem: HTMLLIElement) => {
   const observer = new MutationObserver((mutations) => {

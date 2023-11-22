@@ -5,9 +5,8 @@ import {
   setItemLocalStorage,
 } from '../repository/chromeEvents.repository'
 import { BlackListType } from '../types/BlackList.type'
+import { KeysStorage } from '../types/KeysStorage.type'
 import { FiltersProviderProps } from './types/BlackListContext.type'
-
-const keyStorage = 'blackList'
 
 export const BlackListContext = createContext<{
   blackListStore: BlackListType[]
@@ -29,7 +28,9 @@ export const BlackListProvider = ({ children }: FiltersProviderProps) => {
   const [blackListStore, setBlackListStore] = useState<BlackListType[]>([])
 
   const loadStore = async () => {
-    const data = await getItemLocalStorage<BlackListType[]>(keyStorage)
+    const data = await getItemLocalStorage<BlackListType[]>(
+      KeysStorage.BLACKLIST
+    )
     setBlackListStore(data)
   }
 
@@ -43,7 +44,7 @@ export const BlackListProvider = ({ children }: FiltersProviderProps) => {
       const newState = [...blackListStore]
       newState[index] = payload
 
-      setItemLocalStorage({ key: keyStorage, value: newState })
+      setItemLocalStorage({ key: KeysStorage.BLACKLIST, value: newState })
       await loadStore()
     },
     delete: async (payload: BlackListType): Promise<void> => {
@@ -55,14 +56,14 @@ export const BlackListProvider = ({ children }: FiltersProviderProps) => {
       const newState = [...blackListStore]
       newState.splice(index, 1)
 
-      setItemLocalStorage({ key: keyStorage, value: newState })
+      setItemLocalStorage({ key: KeysStorage.BLACKLIST, value: newState })
       await loadStore()
     },
     create: async (payload: BlackListType): Promise<void> => {
       const newFilter = { ...payload, id: Date.now().toString() }
       const newState = [...blackListStore, newFilter]
 
-      setItemLocalStorage({ key: keyStorage, value: newState })
+      setItemLocalStorage({ key: KeysStorage.BLACKLIST, value: newState })
       await loadStore()
     },
   }
