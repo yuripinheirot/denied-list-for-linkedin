@@ -35,8 +35,8 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ### Como Instalar
 
-1. Baixe a ultima versao da extensao [aqui](https://github.com/yuripinheirot/denied-list-for-linkedin/releases)
-2. Abra o Google Chrome e digite `chrome://extensions/` na barra de endereços.
+1. Baixe a ultima versao da extensao [aqui](https://github.com/yuripinheirot/denied-list-for-linkedin/releases) na versao ZIP e descompacte
+2. Abra o Google Chrome e digite **chrome://extensions/** na barra de endereços.
 3. Ative o Modo Desenvolvedor no canto superior direito da página de extensões.
 4. Clique em "Carregar sem compactação" e selecione a pasta da extensão descompactada no seu computador.
 5. A extensão será carregada e aparecerá na lista de extensões do Chrome.
