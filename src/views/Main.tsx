@@ -29,12 +29,18 @@ export const MainView = () => {
     return blackListActions.delete(data)
   }
 
+  const createFilter = (data: BlackListType) => {
+    return blackListActions.create(data)
+  }
+
   const handleDeleteModal = (data: BlackListType) => {
     confirm({
       title: 'Deseja realmente deletar este filtro?',
       icon: <ExclamationCircleFilled />,
-      closable: true,
+      maskClosable: true,
       content: data.description,
+      cancelText: 'Cancelar',
+      okText: 'Deletar',
       onOk: async () => {
         await deleteFilter(data)
       },
@@ -45,14 +51,13 @@ export const MainView = () => {
     info({
       icon: <ExclamationCircleFilled />,
       footer: null,
-      closable: true,
       maskClosable: true,
       title: 'Novo filtro',
       content: (
         <Form
           layout='vertical'
           onFinish={(payload: BlackListType) => {
-            blackListActions.create(payload)
+            createFilter(payload)
             destroyAll()
           }}
         >
