@@ -11,15 +11,18 @@ import {
   Modal,
   Tooltip,
   Typography,
+  Switch,
 } from 'antd'
 
 import { EditableText } from '../components/EditableText'
+import { AppConfigContext } from '../context/AppConfig.context'
 import { BlackListContext } from '../context/BlackList.context'
 import { BlackListType } from '../types/BlackList.type'
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
   const { blackListActions, blackListStore } = useContext(BlackListContext)
+  const { appConfig, appConfigActions } = useContext(AppConfigContext)
 
   const saveChangesEditableText = (data: BlackListType) => {
     return blackListActions.update(data)
@@ -31,6 +34,10 @@ export const MainView = () => {
 
   const createFilter = (data: BlackListType) => {
     return blackListActions.create(data)
+  }
+
+  const toggleActiveExtension = (value: boolean) => {
+    return appConfigActions.setActiveStatus(value)
   }
 
   const handleDeleteModal = (data: BlackListType) => {
@@ -108,14 +115,30 @@ export const MainView = () => {
         align='center'
       >
         <Typography.Title style={{ margin: 0 }}>Filtros</Typography.Title>
-        <Tooltip title='Novo'>
-          <Button
-            icon={<PlusSquareFilled />}
-            size='small'
-            style={{ marginRight: 7 }}
-            onClick={handleCreateModal}
-          />
-        </Tooltip>
+        <Flex
+          gap={20}
+          align='center'
+        >
+          <Tooltip
+            title={`${appConfig.active ? 'Desativar' : 'Ativar'} extensão`}
+          >
+            <Switch
+              size='small'
+              checked={appConfig.active}
+              onClick={() => {
+                toggleActiveExtension(!appConfig.active)
+              }}
+            />
+          </Tooltip>
+          <Tooltip title='Novo'>
+            <Button
+              icon={<PlusSquareFilled />}
+              size='small'
+              style={{ marginRight: 7 }}
+              onClick={handleCreateModal}
+            />
+          </Tooltip>
+        </Flex>
       </Flex>
       <List
         itemLayout='horizontal'

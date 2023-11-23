@@ -5,8 +5,8 @@ import {
   setItemLocalStorage,
 } from '../repository/chromeEvents.repository'
 import { BlackListType } from '../types/BlackList.type'
+import { FiltersProviderProps } from '../types/BlackListContext.type'
 import { KeysStorage } from '../types/KeysStorage.type'
-import { FiltersProviderProps } from './types/BlackListContext.type'
 
 export const BlackListContext = createContext<{
   blackListStore: BlackListType[]

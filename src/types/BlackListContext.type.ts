@@ -1,4 +1,4 @@
-import { BlackListType } from '../../types/BlackList.type'
+import { BlackListType } from './BlackList.type'
 
 export enum BlackListActions {
   UPDATE = 'update',
