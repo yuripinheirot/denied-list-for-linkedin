@@ -35,12 +35,25 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ### Como Instalar
 
-1. Baixe a ultima versao da extensao [aqui](https://github.com/yuripinheirot/denied-list-for-linkedin/releases) na versao ZIP e descompacte
+1. Baixe a ultima versao build da extensao [aqui](https://github.com/yuripinheirot/denied-list-for-linkedin/releases) na versao ZIP e descompacte
 2. Abra o Google Chrome e digite **chrome://extensions/** na barra de endereços.
 3. Ative o Modo Desenvolvedor no canto superior direito da página de extensões.
 4. Clique em "Carregar sem compactação" e selecione a pasta da extensão descompactada no seu computador.
 5. A extensão será carregada e aparecerá na lista de extensões do Chrome.
 6. Para uma melhor experiencia, deixe a extensao "pinada" para sempre aparecer na sua barra de extensoes
+
+---
+
+### Como utilizar
+
+1. **Inicie uma Busca no LinkedIn**: Digite um termo de interesse na barra de pesquisa do LinkedIn para visualizar as vagas disponíveis.
+2. **Identifique o Botão "Filtrar"**: Nas vagas apresentadas, você notará um botão "Filtrar" adicionado pela extensão em cada uma delas.
+3. **Filtre Vagas Indesejadas**: Clique no botão "Filtrar" da vaga que deseja excluir das futuras buscas. Isso removerá a empresa ou a vaga específica de suas pesquisas posteriores.
+4. **Gerenciamento de Filtros**: Para ajustar ou revisar seus filtros atuais, clique no ícone da extensão, localizado na barra de ferramentas do Chrome. Uma interface simples permitirá que você gerencie suas preferências de filtro.
+
+Seguindo estes passos, a extensão ajudará a otimizar sua busca por empregos no LinkedIn, removendo automaticamente as vagas indesejadas.
+
+![presentation](./presentation.png)
 
 ---
 
