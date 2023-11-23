@@ -14,7 +14,7 @@ Então, decidi desenvolver uma solução prática: uma extensão simples para o 
 
 ---
 
-## Tecnologias Utilizadas
+### Tecnologias Utilizadas
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
@@ -24,7 +24,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ---
 
-## Funcionalidades
+### Funcionalidades
 
 - **Denied List de Vagas**: Adicione termos ou nomes de empresas à sua denied list para que estas não apareçam em suas buscas.
 - **Integração com Navegador**: Funciona diretamente no Google Chrome, integrando-se perfeitamente com sua experiência de navegação.
@@ -32,7 +32,7 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ---
 
-## Como Instalar
+### Como Instalar
 
 1. Clone o repositório para a sua máquina local.
 2. Navegue até a pasta do projeto e execute `npm install` para instalar as dependências.
@@ -41,12 +41,12 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ---
 
-## Contribuições
+### Contribuições
 
 Contribuições são sempre bem-vindas! Se você tem alguma ideia ou sugestão para melhorar a extensão, sinta-se à vontade para criar um pull request ou abrir uma issue.
 
 ---
 
-## Licença
+### Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
