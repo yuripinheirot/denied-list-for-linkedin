@@ -19,7 +19,7 @@ Então, decidi desenvolver uma solução prática: uma extensão simples para o 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
 - [**Google Chrome Extensions**](https://developer.chrome.com/docs/extensions/mv3/): As extensões do Google Chrome são aplicações que adicionam funcionalidades extras e permitem integração com sites e serviços de terceiros no navegador.
-- [**React**](https://react.dev/) Para uma interface de usuário dinâmica e responsiva.
+- [**React**](https://react.dev/): Para uma interface de usuário dinâmica e responsiva.
 - [**TypeScript**](https://www.typescriptlang.org/): Para adicionar tipagem estática ao código, garantindo maior segurança e legibilidade.
 - [**Ant Design**](https://ant.design/): Um design system que oferece componentes de UI elegantes e eficientes.
 
@@ -35,10 +35,12 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 
 ### Como Instalar
 
-1. Clone o repositório para a sua máquina local.
-2. Navegue até a pasta do projeto e execute `npm install` para instalar as dependências.
-3. Para iniciar a extensão em modo de desenvolvimento, use `npm start`.
-4. Carregue a extensão descompactada no Chrome através da opção "Carregar sem compactação" em `chrome://extensions/`.
+1. Baixe a ultima versao da extensao [aqui](https://github.com/yuripinheirot/denied-list-for-linkedin/releases)
+2. Abra o Google Chrome e digite `chrome://extensions/` na barra de endereços.
+3. Ative o Modo Desenvolvedor no canto superior direito da página de extensões.
+4. Clique em "Carregar sem compactação" e selecione a pasta da extensão descompactada no seu computador.
+5. A extensão será carregada e aparecerá na lista de extensões do Chrome.
+6. Para uma melhor experiencia, deixe a extensao "pinada" para sempre aparecer na sua barra de extensoes
 
 ---
 
