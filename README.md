@@ -18,6 +18,7 @@ Então, decidi desenvolver uma solução prática: uma extensão simples para o 
 
 Este projeto foi desenvolvido com as seguintes tecnologias:
 
+- [**Google Chrome Extensions**](https://developer.chrome.com/docs/extensions/mv3/): As extensões do Google Chrome são aplicações que adicionam funcionalidades extras e permitem integração com sites e serviços de terceiros no navegador.
 - [**React**](https://react.dev/) Para uma interface de usuário dinâmica e responsiva.
 - [**TypeScript**](https://www.typescriptlang.org/): Para adicionar tipagem estática ao código, garantindo maior segurança e legibilidade.
 - [**Ant Design**](https://ant.design/): Um design system que oferece componentes de UI elegantes e eficientes.
