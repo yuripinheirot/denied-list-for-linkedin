@@ -1,46 +1,50 @@
-# Getting Started with Create React App
+## Descrição
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Bem-vindo ao repositório do **Denied List for Linkedin**, uma extensão simples para o Google Chrome que lhe ajudará economizar tempo e permite aos usuários filtrar vagas de emprego de acordo com suas preferências. Utilizando uma funcionalidade de denied list, você pode excluir certas vagas ou empresas dos resultados de busca, personalizando sua experiência de procura de emprego.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+### Por que utilizar essa extensão?
 
-### `npm start`
+Recentemente, andei pesquisando algumas oportunidades de emprego, e me deparei com um desafio comum: a predominância de vagas irrelevantes no LinkedIn! originárias de outros portais de emprego. Houve casos em que uma lista de 25 vagas, aproximadamente 20 eram incompatíveis com o que eu procurava, principalmente por serem publicações de outros portais de emprego. Essa situação resultava em uma perda significativa de tempo, pois tinha que filtrar manualmente essas ofertas irrelevantes (e até irritantes).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Então, decidi desenvolver uma solução prática: uma extensão simples para o navegador Google Chrome. O objetivo dessa ferramenta é otimizar o processo de busca por empregos, poupando não só o meu tempo, mas também o de outros usuários. A extensão funciona como um filtro eficaz, removendo automaticamente as vagas que não se alinham às suas preferências e necessidades na lista de pesquisa. Com esta extensão, a busca por vagas se torna mais direcionada e produtiva, eliminando o incômodo de navegar através de inúmeras ofertas irrelevantes.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## Tecnologias Utilizadas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Este projeto foi desenvolvido com as seguintes tecnologias:
 
-### `npm run build`
+- [**React**](https://react.dev/) Para uma interface de usuário dinâmica e responsiva.
+- [**TypeScript**](https://www.typescriptlang.org/): Para adicionar tipagem estática ao código, garantindo maior segurança e legibilidade.
+- [**Ant Design**](https://ant.design/): Um design system que oferece componentes de UI elegantes e eficientes.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Funcionalidades
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Denied List de Vagas**: Adicione termos ou nomes de empresas à sua denied list para que estas não apareçam em suas buscas.
+- **Integração com Navegador**: Funciona diretamente no Google Chrome, integrando-se perfeitamente com sua experiência de navegação.
+- **Personalização Fácil**: Interface intuitiva que permite adicionar ou remover itens da denied list com facilidade.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Como Instalar
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Clone o repositório para a sua máquina local.
+2. Navegue até a pasta do projeto e execute `npm install` para instalar as dependências.
+3. Para iniciar a extensão em modo de desenvolvimento, use `npm start`.
+4. Carregue a extensão descompactada no Chrome através da opção "Carregar sem compactação" em `chrome://extensions/`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Contribuições
 
-## Learn More
+Contribuições são sempre bem-vindas! Se você tem alguma ideia ou sugestão para melhorar a extensão, sinta-se à vontade para criar um pull request ou abrir uma issue.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
