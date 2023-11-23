@@ -2,7 +2,7 @@ import { BlackListType } from '../types/BlackList.type'
 import { KeysStorage } from '../types/KeysStorage.type'
 import { insertHideButtons } from './createHideButton.script'
 
-const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
+const jobListSelector = '#main > div > div.scaffold-layout__list'
 
 const escapeRegExp = (value: string) => {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -62,31 +62,45 @@ const addJobItemListener = (jobItem: HTMLLIElement) => {
 }
 
 const addJobListObserver = () => {
-  const jobList = document.querySelector(jobListSelector)
-  if (!jobList) return
+  const jobListContainer = document.querySelector(jobListSelector)
+  if (!jobListContainer) return
 
-  // for loaded jobs
-  for (const children of jobList.childNodes) {
-    if (children instanceof HTMLLIElement) {
-      addJobItemListener(children)
-      insertHideButtons()
-    }
-  }
+  const observerJobContainer = new MutationObserver((mutationsJobContainer) => {
+    for (const mutationJobContainer of mutationsJobContainer) {
+      const elementAddedInContainer = mutationJobContainer.addedNodes[0]
 
-  // for unloaded jobs
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
       if (
-        mutation.addedNodes.length &&
-        mutation.addedNodes[0] instanceof HTMLLIElement
+        elementAddedInContainer instanceof HTMLDivElement &&
+        elementAddedInContainer
+          .getAttribute('class')
+          ?.includes('jobs-search-results-list')
       ) {
-        addJobItemListener(mutation.addedNodes[0])
-        insertHideButtons()
+        const jobList = elementAddedInContainer.querySelector('ul')
+
+        if (jobList) {
+          const observerJobList = new MutationObserver((mutationsJobList) => {
+            for (const mutationJobList of mutationsJobList) {
+              const elementAddedInJobList = mutationJobList.addedNodes[0]
+              if (elementAddedInJobList instanceof HTMLLIElement) {
+                addJobItemListener(elementAddedInJobList)
+                insertHideButtons()
+              }
+            }
+          })
+
+          observerJobList.observe(jobList, {
+            childList: true,
+            attributes: true,
+          })
+        }
       }
     }
   })
 
-  observer.observe(jobList, { childList: true, attributes: true })
+  observerJobContainer.observe(jobListContainer, {
+    childList: true,
+    attributes: true,
+  })
 }
 
 export const executeFilter = () => {
