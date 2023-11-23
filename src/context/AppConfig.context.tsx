@@ -7,7 +7,7 @@ import {
 import { AppConfigType } from '../types/AppConfig.type'
 import { KeysStorage } from '../types/KeysStorage.type'
 
-const initialState: AppConfigType = {
+export const initialStateAppConfig: AppConfigType = {
   active: true,
 }
 
@@ -15,7 +15,7 @@ export const AppConfigContext = createContext<{
   appConfig: AppConfigType
   appConfigActions: { setActiveStatus: (status: boolean) => Promise<void> }
 }>({
-  appConfig: initialState,
+  appConfig: initialStateAppConfig,
   appConfigActions: { setActiveStatus: async () => {} },
 })
 
@@ -23,7 +23,9 @@ type AppConfigProviderProps = {
   children: React.ReactNode
 }
 export const AppConfigProvider = ({ children }: AppConfigProviderProps) => {
-  const [appConfig, setAppConfig] = useState<AppConfigType>(initialState)
+  const [appConfig, setAppConfig] = useState<AppConfigType>(
+    initialStateAppConfig
+  )
 
   const loadStore = async () => {
     const data = await getItemLocalStorage<AppConfigType>(
@@ -31,10 +33,13 @@ export const AppConfigProvider = ({ children }: AppConfigProviderProps) => {
     )
 
     if (!data) {
-      setItemLocalStorage({ key: KeysStorage.APP_CONFIG, value: initialState })
+      setItemLocalStorage({
+        key: KeysStorage.APP_CONFIG,
+        value: initialStateAppConfig,
+      })
     }
 
-    setAppConfig(data || initialState)
+    setAppConfig(data || initialStateAppConfig)
   }
 
   const appConfigActions = {

@@ -1,6 +1,9 @@
 import { AppConfigType } from '../types/AppConfig.type'
 import { KeysStorage } from '../types/KeysStorage.type'
 import { executeFilter } from './executeFilter.script'
+import { initializeParams } from './initializeParams.script'
+
+initializeParams()
 
 const getAppConfig = () => {
   const appConfig = localStorage.getItem(KeysStorage.APP_CONFIG)
@@ -10,6 +13,7 @@ const getAppConfig = () => {
 
   return null
 }
+
 chrome.runtime.onMessage.addListener((request: { message: string }) => {
   // listen for messages sent from background.js
   if (request.message === 'executeFilter' && getAppConfig()?.active) {

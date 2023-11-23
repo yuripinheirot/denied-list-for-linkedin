@@ -8,6 +8,7 @@ import { BlackListType } from '../types/BlackList.type'
 import { FiltersProviderProps } from '../types/BlackListContext.type'
 import { KeysStorage } from '../types/KeysStorage.type'
 
+export const initialStateBlackList: BlackListType[] = []
 export const BlackListContext = createContext<{
   blackListStore: BlackListType[]
   blackListActions: {
@@ -16,7 +17,7 @@ export const BlackListContext = createContext<{
     create: (payload: BlackListType) => Promise<void>
   }
 }>({
-  blackListStore: [],
+  blackListStore: initialStateBlackList,
   blackListActions: {
     update: async () => {},
     delete: async () => {},
