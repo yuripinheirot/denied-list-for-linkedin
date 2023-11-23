@@ -1,4 +1,6 @@
-## Descrição
+# Denied List for Linkedin
+
+### Descrição
 
 Bem-vindo ao repositório do **Denied List for Linkedin**, uma extensão simples para o Google Chrome que lhe ajudará economizar tempo e permite aos usuários filtrar vagas de emprego de acordo com suas preferências. Utilizando uma funcionalidade de denied list, você pode excluir certas vagas ou empresas dos resultados de busca, personalizando sua experiência de procura de emprego.
 
