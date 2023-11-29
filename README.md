@@ -40,7 +40,8 @@ Este projeto foi desenvolvido com as seguintes tecnologias:
 3. Ative o Modo Desenvolvedor no canto superior direito da página de extensões.
 4. Clique em "Carregar sem compactação" e selecione a pasta da extensão descompactada no seu computador.
 5. A extensão será carregada e aparecerá na lista de extensões do Chrome.
-6. Para uma melhor experiencia, deixe a extensao "pinada" para sempre aparecer na sua barra de extensoes
+6. Reinicie sua pagina do linkedin para a extensao aplicar configuracoes iniciais.
+7. Para uma melhor experiencia, deixe a extensao "pinada" para sempre aparecer na sua barra de extensoes
 
 ---
 
