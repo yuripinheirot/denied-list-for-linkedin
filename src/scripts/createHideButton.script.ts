@@ -69,7 +69,7 @@ const createHideButton = () => {
 
 export const insertHideButtons = () => {
   const jobList = document.querySelectorAll(
-    '#main > div > div.scaffold-layout__list > div > ul > li'
+    '#main > div > div.scaffold-layout__list-detail-inner.scaffold-layout__list-detail-inner--grow > div.scaffold-layout__list > div > ul > li'
   )
 
   for (const children of jobList) {
