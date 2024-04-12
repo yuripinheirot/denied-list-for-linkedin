@@ -62,7 +62,8 @@ const addJobItemObserver = (jobItem: HTMLLIElement) => {
 }
 
 const addJobListObserver = async () => {
-  const jobListSelector = '#main > div > div.scaffold-layout__list > div > ul'
+  const jobListSelector =
+    '#main > div > div.scaffold-layout__list-detail-inner.scaffold-layout__list-detail-inner--grow > div.scaffold-layout__list > div > ul'
   let jobList = document.querySelector(jobListSelector)
 
   while (!jobList) {
