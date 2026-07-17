@@ -1,11 +1,18 @@
 import { BlackListType } from '../types/BlackList.type'
 import { KeysStorage } from '../types/KeysStorage.type'
-import { insertHideButtons } from './createHideButton.script'
+import {
+  extractCompanyFromJobCard,
+  insertHideButtons,
+  JOB_CARD_SELECTOR,
+} from './createHideButton.script'
 
 const defaultPropsObservers: MutationObserverInit = {
   childList: true,
-  attributes: true,
+  subtree: true,
 }
+const JOB_LIST_SELECTOR =
+  '[data-testid="lazy-column"][componentkey="SearchResultsMainContent"]'
+const observedJobLists = new WeakSet<Element>()
 
 const escapeRegExp = (value: string) => {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -31,68 +38,49 @@ const blackListPattern = () => {
   )
 }
 
-const removeJob = (element: Element) => {
-  if (element instanceof HTMLLIElement) {
-    element.remove()
-    console.log('Removed job: ', element.innerText.replaceAll('\n', ''))
-  }
+const removeJob = (element: HTMLElement) => {
+  element.remove()
+  console.log('Removed job: ', element.innerText.replaceAll('\n', ''))
 }
 
 const isJobBlacklisted = (element: HTMLElement) => {
-  return blackListPattern().test(element.innerText.toLowerCase())
+  const company = extractCompanyFromJobCard(element)
+  return company ? blackListPattern().test(company.toLowerCase()) : false
 }
 
-const addJobItemObserver = (jobItem: HTMLLIElement) => {
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (
-        mutation.addedNodes[0] instanceof HTMLElement &&
-        isJobBlacklisted(mutation.addedNodes[0])
-      ) {
-        removeJob(jobItem)
-      }
+const processJobCards = (jobList: Element) => {
+  const jobCards = jobList.querySelectorAll<HTMLElement>(JOB_CARD_SELECTOR)
+
+  for (const jobCard of jobCards) {
+    if (isJobBlacklisted(jobCard)) {
+      removeJob(jobCard)
     }
-  })
-
-  observer.observe(jobItem, defaultPropsObservers)
-
-  if (isJobBlacklisted(jobItem)) {
-    removeJob(jobItem)
   }
+
+  insertHideButtons(jobList)
 }
 
 const addJobListObserver = async () => {
-  const jobListSelector =
-    '#main > div > div.scaffold-layout__list-detail-inner.scaffold-layout__list-detail-inner--grow > div.scaffold-layout__list > div > ul'
-  let jobList = document.querySelector(jobListSelector)
+  let jobList = document.querySelector(JOB_LIST_SELECTOR)
 
   while (!jobList) {
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    jobList = document.querySelector(jobListSelector)
+    jobList = document.querySelector(JOB_LIST_SELECTOR)
   }
 
-  // for loaded jobs
-  for (const children of jobList.childNodes) {
-    if (children instanceof HTMLLIElement) {
-      addJobItemObserver(children)
-      insertHideButtons()
-    }
+  const currentJobList = jobList
+  processJobCards(currentJobList)
+
+  if (observedJobLists.has(currentJobList)) {
+    return
   }
 
-  // for unloaded jobs
-  const observer = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (
-        mutation.addedNodes.length &&
-        mutation.addedNodes[0] instanceof HTMLLIElement
-      ) {
-        addJobItemObserver(mutation.addedNodes[0])
-        insertHideButtons()
-      }
-    }
+  const observer = new MutationObserver(() => {
+    processJobCards(currentJobList)
   })
 
-  observer.observe(jobList, defaultPropsObservers)
+  observer.observe(currentJobList, defaultPropsObservers)
+  observedJobLists.add(currentJobList)
 }
 
 export const executeFilter = async () => {
