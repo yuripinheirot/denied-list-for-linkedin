@@ -7,6 +7,7 @@ export const initializeParams = () => {
       KeysStorage.APP_CONFIG,
       JSON.stringify({
         active: true,
+        hideAppliedJobs: false,
       })
     )
   }

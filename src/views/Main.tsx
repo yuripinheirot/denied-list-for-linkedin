@@ -1,9 +1,14 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
-import { ExclamationCircleFilled, PlusSquareFilled } from '@ant-design/icons'
+import {
+  ExclamationCircleFilled,
+  PlusOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
 
 import {
   Button,
+  Empty,
   Flex,
   Form,
   Input,
@@ -11,18 +16,17 @@ import {
   Modal,
   Tooltip,
   Typography,
-  Switch,
 } from 'antd'
 
 import { EditableText } from '../components/EditableText'
-import { AppConfigContext } from '../context/AppConfig.context'
+import { SettingsModal } from '../components/SettingsModal'
 import { BlackListContext } from '../context/BlackList.context'
 import { BlackListType } from '../types/BlackList.type'
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
   const { blackListActions, blackListStore } = useContext(BlackListContext)
-  const { appConfig, appConfigActions } = useContext(AppConfigContext)
+  const [settingsOpen, setSettingsOpen] = useState(false)
 
   const saveChangesEditableText = (data: BlackListType) => {
     return blackListActions.update(data)
@@ -34,10 +38,6 @@ export const MainView = () => {
 
   const createFilter = (data: BlackListType) => {
     return blackListActions.create(data)
-  }
-
-  const toggleActiveExtension = (value: boolean) => {
-    return appConfigActions.setActiveStatus(value)
   }
 
   const handleDeleteModal = (data: BlackListType) => {
@@ -104,7 +104,7 @@ export const MainView = () => {
       style={{
         width: 400,
         height: 500,
-        padding: 20,
+        padding: 16,
         backgroundColor: '#fff',
         overflowY: 'auto',
       }}
@@ -114,44 +114,71 @@ export const MainView = () => {
         justify='space-between'
         align='center'
       >
-        <Typography.Title style={{ margin: 0 }}>Filtros</Typography.Title>
+        <Typography.Title
+          level={4}
+          style={{ margin: 0 }}
+        >
+          Filtros
+        </Typography.Title>
+        <Tooltip title='Configurações'>
+          <Button
+            type='text'
+            icon={<SettingOutlined />}
+            aria-label='Configurações'
+            onClick={() => setSettingsOpen(true)}
+          />
+        </Tooltip>
+      </Flex>
+
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+      />
+
+      <Flex
+        vertical
+        gap={8}
+      >
         <Flex
-          gap={20}
+          justify='space-between'
           align='center'
         >
-          <Tooltip
-            title={`${appConfig.active ? 'Desativar' : 'Ativar'} extensão`}
+          <Typography.Text
+            type='secondary'
+            style={{ fontSize: 12, fontWeight: 600 }}
           >
-            <Switch
-              size='small'
-              checked={appConfig.active}
-              onClick={() => {
-                toggleActiveExtension(!appConfig.active)
-              }}
-            />
-          </Tooltip>
-          <Tooltip title='Novo'>
-            <Button
-              icon={<PlusSquareFilled />}
-              size='small'
-              style={{ marginRight: 7 }}
-              onClick={handleCreateModal}
-            />
-          </Tooltip>
+            Empresas
+          </Typography.Text>
+          <Button
+            type='text'
+            size='small'
+            icon={<PlusOutlined />}
+            onClick={handleCreateModal}
+          >
+            Nova
+          </Button>
         </Flex>
+        <List
+          itemLayout='horizontal'
+          dataSource={blackListStore}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description='Nenhuma empresa filtrada'
+              />
+            ),
+          }}
+          renderItem={(item) => (
+            <EditableText
+              data={item}
+              saveChanges={(data) => saveChangesEditableText(data)}
+              openModal={handleDeleteModal}
+            />
+          )}
+          rowKey={(item) => item.id!}
+        />
       </Flex>
-      <List
-        itemLayout='horizontal'
-        dataSource={blackListStore}
-        renderItem={(item) => (
-          <EditableText
-            data={item}
-            saveChanges={(data) => saveChangesEditableText(data)}
-            openModal={handleDeleteModal}
-          />
-        )}
-        rowKey={(item) => item.id!}
-      />
     </Flex>
   )
 }
