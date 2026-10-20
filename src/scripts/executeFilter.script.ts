@@ -1,10 +1,5 @@
-import {
-  insertHideButtons,
-  JOB_CARD_SELECTOR,
-} from './createHideButton.script'
-import { appliedJobsFilter } from './filters/appliedJobs.filter'
-import { companyBlacklistFilter } from './filters/companyBlacklist.filter'
-import { JobFilter } from './filters/jobFilter.type'
+import { applyWordlistFilter, restoreFilteredJobs } from './filters/wordlist.filter'
+import { readAppConfig } from './storage/pageStorage.script'
 
 const defaultPropsObservers: MutationObserverInit = {
   childList: true,
@@ -13,21 +8,14 @@ const defaultPropsObservers: MutationObserverInit = {
 const JOB_LIST_SELECTOR =
   '[data-testid="lazy-column"][componentkey="SearchResultsMainContent"]'
 const observedJobLists = new WeakSet<Element>()
-const jobFilters: JobFilter[] = [companyBlacklistFilter, appliedJobsFilter]
 
 const processJobCards = (jobList: Element) => {
-  const jobCards = jobList.querySelectorAll<HTMLElement>(JOB_CARD_SELECTOR)
-
-  for (const jobCard of jobCards) {
-    for (const filter of jobFilters) {
-      const handled = filter.apply({ jobCard, jobList })
-      if (handled) {
-        break
-      }
-    }
+  if (!readAppConfig().active) {
+    restoreFilteredJobs()
+    return
   }
 
-  insertHideButtons(jobList)
+  applyWordlistFilter(jobList)
 }
 
 const addJobListObserver = async () => {

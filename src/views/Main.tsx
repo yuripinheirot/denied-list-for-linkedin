@@ -1,113 +1,53 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext } from 'react'
 
-import {
-  ExclamationCircleFilled,
-  PlusOutlined,
-  SettingOutlined,
-} from '@ant-design/icons'
+import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons'
 
-import {
-  Button,
-  Empty,
-  Flex,
-  Form,
-  Input,
-  List,
-  Modal,
-  Tooltip,
-  Typography,
-} from 'antd'
+import { Button, Empty, Flex, Form, Input, List, Modal, Typography } from 'antd'
 
 import { EditableText } from '../components/EditableText'
-import {
-  createSettingsContent,
-  openSettingsModal,
-} from '../components/SettingsModal'
+import { SettingRow } from '../components/SettingRow'
 import { AppConfigContext } from '../context/AppConfig.context'
-import { BlackListContext } from '../context/BlackList.context'
-import { BlackListType } from '../types/BlackList.type'
+import { DeniedListContext } from '../context/DeniedList.context'
+
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
-  const { blackListActions, blackListStore } = useContext(BlackListContext)
   const { appConfig, appConfigActions } = useContext(AppConfigContext)
-  const settingsModalRef = useRef<ReturnType<typeof info> | null>(null)
-  const appConfigActionsRef = useRef(appConfigActions)
-  appConfigActionsRef.current = appConfigActions
+  const { deniedList, deniedListActions } = useContext(DeniedListContext)
 
-  const saveChangesEditableText = (data: BlackListType) => {
-    return blackListActions.update(data)
-  }
-
-  const deleteFilter = (data: BlackListType) => {
-    return blackListActions.delete(data)
-  }
-
-  const createFilter = (data: BlackListType) => {
-    return blackListActions.create(data)
-  }
-
-  const handleDeleteModal = (data: BlackListType) => {
+  const handleDeleteModal = (term: string) => {
     confirm({
-      title: 'Deseja realmente deletar este filtro?',
+      title: 'Deseja realmente deletar este termo?',
       icon: <ExclamationCircleFilled />,
       maskClosable: true,
-      content: data.description,
+      content: term,
       cancelText: 'Cancelar',
       okText: 'Deletar',
       onOk: async () => {
-        await deleteFilter(data)
+        await deniedListActions.delete(term)
       },
     })
   }
-
-  const settingsContentProps = () => {
-    return {
-      active: appConfig.active,
-      hideAppliedJobs: appConfig.hideAppliedJobs,
-      onActiveChange: (checked: boolean) => {
-        void appConfigActionsRef.current.setActiveStatus(checked)
-      },
-      onHideAppliedChange: (checked: boolean) => {
-        void appConfigActionsRef.current.setHideAppliedJobs(checked)
-      },
-    }
-  }
-
-  const handleOpenSettings = () => {
-    settingsModalRef.current = openSettingsModal({
-      ...settingsContentProps(),
-      afterClose: () => {
-        settingsModalRef.current = null
-      },
-    })
-  }
-
-  useEffect(() => {
-    settingsModalRef.current?.update({
-      content: createSettingsContent(settingsContentProps()),
-    })
-  }, [appConfig.active, appConfig.hideAppliedJobs])
 
   const handleCreateModal = () => {
     info({
       icon: <ExclamationCircleFilled />,
       footer: null,
       maskClosable: true,
-      title: 'Novo filtro',
+      title: 'Novo termo',
       content: (
         <Form
           layout='vertical'
-          onFinish={(payload: BlackListType) => {
-            createFilter(payload)
+          onFinish={(payload: { term: string }) => {
+            void deniedListActions.create(payload.term)
             destroyAll()
           }}
         >
-          <Form.Item<string>
-            name='description'
-            label='Insira uma descrição'
+          <Form.Item
+            name='term'
+            label='Insira um termo'
             rules={[
-              { required: true, message: 'Por favor, insira uma descrição!' },
+              { required: true, message: 'Por favor, insira um termo!' },
             ]}
           >
             <Input />
@@ -145,25 +85,14 @@ export const MainView = () => {
       }}
       gap={20}
     >
-      <Flex
-        justify='space-between'
-        align='center'
-      >
-        <Typography.Title
-          level={4}
-          style={{ margin: 0 }}
-        >
-          Filtros
-        </Typography.Title>
-        <Tooltip title='Configurações'>
-          <Button
-            type='text'
-            icon={<SettingOutlined />}
-            aria-label='Configurações'
-            onClick={handleOpenSettings}
-          />
-        </Tooltip>
-      </Flex>
+      <SettingRow
+        label='Extensão ativa'
+        description='Aplica a denied list na busca de vagas'
+        checked={appConfig.active}
+        onChange={(checked) => {
+          void appConfigActions.setActiveStatus(checked)
+        }}
+      />
 
       <Flex
         vertical
@@ -177,7 +106,7 @@ export const MainView = () => {
             type='secondary'
             style={{ fontSize: 12, fontWeight: 600 }}
           >
-            Empresas
+            Denied list
           </Typography.Text>
           <Button
             type='text'
@@ -190,23 +119,23 @@ export const MainView = () => {
         </Flex>
         <List
           itemLayout='horizontal'
-          dataSource={blackListStore}
+          dataSource={deniedList}
           locale={{
             emptyText: (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description='Nenhuma empresa filtrada'
+                description='Nenhum termo na denied list'
               />
             ),
           }}
-          renderItem={(item) => (
+          renderItem={(term) => (
             <EditableText
-              data={item}
-              saveChanges={(data) => saveChangesEditableText(data)}
+              term={term}
+              saveChanges={deniedListActions.update}
               openModal={handleDeleteModal}
             />
           )}
-          rowKey={(item) => item.id!}
+          rowKey={(term) => term}
         />
       </Flex>
     </Flex>

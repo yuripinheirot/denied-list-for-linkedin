@@ -1,40 +1,31 @@
-/* eslint-disable indent */
 import { useState } from 'react'
 
-import { EditFilled, DeleteFilled } from '@ant-design/icons'
+import { DeleteFilled, EditFilled } from '@ant-design/icons'
 
 import { Button, Input, List, Tooltip } from 'antd'
 
-import { BlackListType } from '../types/BlackList.type'
-
-type Props = {
-  data: BlackListType
-  initOpened?: boolean
-  saveChanges: (data: BlackListType) => Promise<void>
-  openModal: (data: BlackListType) => void
+type EditableTextProps = {
+  term: string
+  saveChanges: (current: string, next: string) => Promise<void>
+  openModal: (term: string) => void
 }
 
 export const EditableText = ({
-  data,
-  initOpened,
+  term,
   saveChanges,
   openModal,
-}: Props) => {
-  const [opened, setOpened] = useState(!!initOpened)
-  const [innerText, setInnerText] = useState(data.description)
+}: EditableTextProps) => {
+  const [opened, setOpened] = useState(false)
+  const [innerText, setInnerText] = useState(term)
 
   const handleSaveChanges = () => {
-    saveChanges({ id: data.id, description: innerText })
+    void saveChanges(term, innerText)
     setOpened(false)
   }
 
   const cancelChanges = () => {
-    setInnerText(data.description)
+    setInnerText(term)
     setOpened(false)
-  }
-
-  const handleOpenModal = () => {
-    openModal({ id: data.id, description: innerText })
   }
 
   const actions = [
@@ -69,13 +60,13 @@ export const EditableText = ({
               >
                 <Button
                   size='small'
-                  onClick={handleOpenModal}
+                  onClick={() => openModal(innerText)}
                   icon={<DeleteFilled />}
                 />
               </Tooltip>,
               <Tooltip
                 title='Editar'
-                key='tooltipDelete'
+                key='tooltipEdit'
               >
                 <Button
                   size='small'
@@ -89,11 +80,11 @@ export const EditableText = ({
       {opened ? (
         <Input
           value={innerText}
-          onChange={(e) => setInnerText(e.target.value)}
+          onChange={(event) => setInnerText(event.target.value)}
           size='small'
         />
       ) : (
-        <List.Item.Meta title={data.description} />
+        <List.Item.Meta title={term} />
       )}
     </List.Item>
   )
