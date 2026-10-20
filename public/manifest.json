@@ -17,5 +17,5 @@
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["activeTab", "storage", "tabs", "unlimitedStorage"]
+  "permissions": ["activeTab", "storage", "tabs"]
 }
