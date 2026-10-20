@@ -4,8 +4,52 @@ import { KeysStorage } from '../types/KeysStorage.type'
 export const JOB_CARD_SELECTOR =
   '[role="button"][componentkey^="job-card-component-ref-"]'
 const HIDE_BUTTON_ATTRIBUTE = 'data-linkedin-company-filter-button'
+const HIDE_BUTTON_STYLE_ID = 'linkedin-company-filter-button-style'
 const DISMISS_BUTTON_SELECTOR =
   'button[aria-label^="Dismiss "][aria-label$=" job"]'
+
+const ensureHideButtonStyles = () => {
+  if (document.getElementById(HIDE_BUTTON_STYLE_ID)) {
+    return
+  }
+
+  const style = document.createElement('style')
+  style.id = HIDE_BUTTON_STYLE_ID
+  style.textContent = `
+    button[${HIDE_BUTTON_ATTRIBUTE}] {
+      display: inline-flex;
+      align-items: center;
+      align-self: center;
+      flex: 0 0 auto;
+      height: 28px;
+      margin-right: 4px;
+      padding: 0 12px;
+      border: 1px solid #0a66c2;
+      border-radius: 999px;
+      background-color: transparent;
+      color: #0a66c2;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    button[${HIDE_BUTTON_ATTRIBUTE}]:hover {
+      background-color: #0a66c2;
+      color: #ffffff;
+    }
+
+    button[${HIDE_BUTTON_ATTRIBUTE}]:focus-visible {
+      outline: 2px solid #0a66c2;
+      outline-offset: 2px;
+    }
+  `
+  document.head.appendChild(style)
+}
 
 export const extractCompanyFromJobCard = (jobCard: HTMLElement) => {
   const paragraphs = Array.from(jobCard.querySelectorAll('p'))
@@ -21,13 +65,6 @@ const createHideButton = (jobCard: HTMLElement) => {
   hideButton.type = 'button'
   hideButton.setAttribute(HIDE_BUTTON_ATTRIBUTE, 'true')
   hideButton.setAttribute('aria-label', 'Filtrar empresa')
-  hideButton.style.padding = '5px 10px'
-  hideButton.style.marginRight = '8px'
-  hideButton.style.backgroundColor = '#f2f2f2'
-  hideButton.style.color = '#2e2e2e'
-  hideButton.style.border = '1px solid black'
-  hideButton.style.borderRadius = '5px'
-  hideButton.style.cursor = 'pointer'
 
   const addToBlacklist = (company: string) => {
     try {
@@ -74,6 +111,7 @@ const createHideButton = (jobCard: HTMLElement) => {
 }
 
 export const insertHideButtons = (root: ParentNode = document) => {
+  ensureHideButtonStyles()
   const jobCards = root.querySelectorAll<HTMLElement>(JOB_CARD_SELECTOR)
 
   for (const jobCard of jobCards) {
