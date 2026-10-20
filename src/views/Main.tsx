@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 
 import {
   ExclamationCircleFilled,
@@ -19,14 +19,21 @@ import {
 } from 'antd'
 
 import { EditableText } from '../components/EditableText'
-import { SettingsModal } from '../components/SettingsModal'
+import {
+  createSettingsContent,
+  openSettingsModal,
+} from '../components/SettingsModal'
+import { AppConfigContext } from '../context/AppConfig.context'
 import { BlackListContext } from '../context/BlackList.context'
 import { BlackListType } from '../types/BlackList.type'
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
   const { blackListActions, blackListStore } = useContext(BlackListContext)
-  const [settingsOpen, setSettingsOpen] = useState(false)
+  const { appConfig, appConfigActions } = useContext(AppConfigContext)
+  const settingsModalRef = useRef<ReturnType<typeof info> | null>(null)
+  const appConfigActionsRef = useRef(appConfigActions)
+  appConfigActionsRef.current = appConfigActions
 
   const saveChangesEditableText = (data: BlackListType) => {
     return blackListActions.update(data)
@@ -53,6 +60,34 @@ export const MainView = () => {
       },
     })
   }
+
+  const settingsContentProps = () => {
+    return {
+      active: appConfig.active,
+      hideAppliedJobs: appConfig.hideAppliedJobs,
+      onActiveChange: (checked: boolean) => {
+        void appConfigActionsRef.current.setActiveStatus(checked)
+      },
+      onHideAppliedChange: (checked: boolean) => {
+        void appConfigActionsRef.current.setHideAppliedJobs(checked)
+      },
+    }
+  }
+
+  const handleOpenSettings = () => {
+    settingsModalRef.current = openSettingsModal({
+      ...settingsContentProps(),
+      afterClose: () => {
+        settingsModalRef.current = null
+      },
+    })
+  }
+
+  useEffect(() => {
+    settingsModalRef.current?.update({
+      content: createSettingsContent(settingsContentProps()),
+    })
+  }, [appConfig.active, appConfig.hideAppliedJobs])
 
   const handleCreateModal = () => {
     info({
@@ -125,15 +160,10 @@ export const MainView = () => {
             type='text'
             icon={<SettingOutlined />}
             aria-label='Configurações'
-            onClick={() => setSettingsOpen(true)}
+            onClick={handleOpenSettings}
           />
         </Tooltip>
       </Flex>
-
-      <SettingsModal
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-      />
 
       <Flex
         vertical
