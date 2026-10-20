@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["chrome", "jest", "node", "react", "react-dom"]
   },
   "include": ["src"]
 }
