@@ -1,3 +1,5 @@
+import { foldForMatch } from './foldForMatch'
+
 const collapseWhitespace = (value: string) => {
   return value.trim().replace(/\s+/g, ' ')
 }
@@ -13,7 +15,7 @@ export const normalizeDeniedList = (terms: string[]) => {
       continue
     }
 
-    const key = collapsed.toLowerCase()
+    const key = foldForMatch(collapsed)
 
     if (seen.has(key)) {
       continue

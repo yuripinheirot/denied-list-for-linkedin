@@ -1,4 +1,5 @@
 import { buildDeniedListPattern } from '../../deniedList/deniedListPattern'
+import { foldForMatch } from '../../deniedList/foldForMatch'
 import { getJobCardContainer, JOB_CARD_SELECTOR } from '../jobCard'
 import { readDeniedList } from '../storage/pageStorage.script'
 
@@ -68,7 +69,7 @@ export const applyWordlistFilter = (jobList: Element) => {
 
   for (const jobCard of jobCards) {
     const container = getJobCardContainer(jobCard, jobList)
-    const matches = pattern?.test(readCardText(jobCard)) ?? false
+    const matches = pattern?.test(foldForMatch(readCardText(jobCard))) ?? false
 
     if (matches) {
       hideJob(container)

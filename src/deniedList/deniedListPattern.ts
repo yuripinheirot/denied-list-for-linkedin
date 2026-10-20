@@ -1,3 +1,4 @@
+import { foldForMatch } from './foldForMatch'
 import { normalizeDeniedList } from './parseDeniedList'
 
 const WORD_CHARACTER = String.raw`\p{L}\p{N}_`
@@ -14,7 +15,7 @@ export const buildDeniedListPattern = (terms: string[]) => {
   }
 
   const alternatives = normalizedTerms.map((term) => {
-    const words = term.split(/\s+/).map(escapeRegExp)
+    const words = foldForMatch(term).split(/\s+/).map(escapeRegExp)
 
     return `(?<![${WORD_CHARACTER}])${words.join(String.raw`\s+`)}(?![${WORD_CHARACTER}])`
   })
