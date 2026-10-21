@@ -1,11 +1,6 @@
+import { buildWholeWordSource } from '../textMatch/wholeWordPattern'
 import { foldForMatch } from './foldForMatch'
 import { normalizeDeniedList } from './parseDeniedList'
-
-const WORD_CHARACTER = String.raw`\p{L}\p{N}_`
-
-const escapeRegExp = (value: string) => {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
 
 export const buildDeniedListPattern = (terms: string[]) => {
   const normalizedTerms = normalizeDeniedList(terms)
@@ -14,11 +9,9 @@ export const buildDeniedListPattern = (terms: string[]) => {
     return null
   }
 
-  const alternatives = normalizedTerms.map((term) => {
-    const words = foldForMatch(term).split(/\s+/).map(escapeRegExp)
-
-    return `(?<![${WORD_CHARACTER}])${words.join(String.raw`\s+`)}(?![${WORD_CHARACTER}])`
-  })
+  const alternatives = normalizedTerms.map((term) =>
+    buildWholeWordSource(foldForMatch(term))
+  )
 
   return new RegExp(alternatives.join('|'), 'iu')
 }
