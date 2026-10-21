@@ -1,21 +1,28 @@
+import { useContext } from 'react'
+
 import { Alert, Flex } from 'antd'
 
-const UNSUPPORTED_PAGE_MESSAGE =
-  'Esta extensão só funciona na página de resultados de pesquisa de vagas: https://www.linkedin.com/jobs/search-results'
+import { PopupHeader } from '../components/PopupHeader'
+import { LocaleContext } from '../context/Locale.context'
 
 export const UnsupportedPage = () => {
+  const { messages } = useContext(LocaleContext)
+
   return (
     <Flex
+      vertical
+      gap={20}
       style={{
         width: 400,
         padding: 16,
         backgroundColor: '#fff',
       }}
     >
+      <PopupHeader />
       <Alert
         type='warning'
         showIcon
-        message={UNSUPPORTED_PAGE_MESSAGE}
+        message={messages.unsupportedPage}
       />
     </Flex>
   )

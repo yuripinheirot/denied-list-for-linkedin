@@ -5,24 +5,27 @@ import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons'
 import { Button, Empty, Flex, Form, Input, List, Modal, Typography } from 'antd'
 
 import { EditableText } from '../components/EditableText'
+import { PopupHeader } from '../components/PopupHeader'
 import { SettingRow } from '../components/SettingRow'
 import { AppConfigContext } from '../context/AppConfig.context'
 import { DeniedListContext } from '../context/DeniedList.context'
+import { LocaleContext } from '../context/Locale.context'
 
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
   const { appConfig, appConfigActions } = useContext(AppConfigContext)
   const { deniedList, deniedListActions } = useContext(DeniedListContext)
+  const { messages } = useContext(LocaleContext)
 
   const handleDeleteModal = (term: string) => {
     confirm({
-      title: 'Deseja realmente deletar este termo?',
+      title: messages.deleteTermTitle,
       icon: <ExclamationCircleFilled />,
       maskClosable: true,
       content: term,
-      cancelText: 'Cancelar',
-      okText: 'Deletar',
+      cancelText: messages.cancel,
+      okText: messages.delete,
       onOk: async () => {
         await deniedListActions.delete(term)
       },
@@ -34,7 +37,7 @@ export const MainView = () => {
       icon: <ExclamationCircleFilled />,
       footer: null,
       maskClosable: true,
-      title: 'Novo termo',
+      title: messages.newTermTitle,
       content: (
         <Form
           layout='vertical'
@@ -45,10 +48,8 @@ export const MainView = () => {
         >
           <Form.Item
             name='term'
-            label='Insira um termo'
-            rules={[
-              { required: true, message: 'Por favor, insira um termo!' },
-            ]}
+            label={messages.termLabel}
+            rules={[{ required: true, message: messages.termRequired }]}
           >
             <Input />
           </Form.Item>
@@ -59,13 +60,13 @@ export const MainView = () => {
               margin: 0,
             }}
           >
-            <Button onClick={() => destroyAll()}>Cancelar</Button>
+            <Button onClick={() => destroyAll()}>{messages.cancel}</Button>
             <Button
               type='primary'
               htmlType='submit'
               style={{ marginLeft: 8 }}
             >
-              Salvar
+              {messages.save}
             </Button>
           </Form.Item>
         </Form>
@@ -85,27 +86,10 @@ export const MainView = () => {
       }}
       gap={20}
     >
-      <Flex
-        align='center'
-        gap={12}
-      >
-        <img
-          src={`${process.env.PUBLIC_URL}/icons/icon128.png`}
-          alt=''
-          width={36}
-          height={36}
-          style={{ borderRadius: 8 }}
-        />
-        <Typography.Title
-          level={4}
-          style={{ margin: 0 }}
-        >
-          Denied list
-        </Typography.Title>
-      </Flex>
+      <PopupHeader />
       <SettingRow
-        label='Extensão ativa'
-        description='Aplica a denied list na busca de vagas'
+        label={messages.extensionActive}
+        description={messages.extensionActiveDescription}
         checked={appConfig.active}
         onChange={(checked) => {
           void appConfigActions.setActiveStatus(checked)
@@ -124,7 +108,7 @@ export const MainView = () => {
             type='secondary'
             style={{ fontSize: 12, fontWeight: 600 }}
           >
-            Denied list
+            {messages.deniedListSection}
           </Typography.Text>
           <Button
             type='text'
@@ -132,7 +116,7 @@ export const MainView = () => {
             icon={<PlusOutlined />}
             onClick={handleCreateModal}
           >
-            Nova
+            {messages.newTermAction}
           </Button>
         </Flex>
         <List
@@ -142,7 +126,7 @@ export const MainView = () => {
             emptyText: (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description='Nenhum termo na denied list'
+                description={messages.emptyDeniedList}
               />
             ),
           }}

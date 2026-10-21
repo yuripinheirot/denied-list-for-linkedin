@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 
 import { DeleteFilled, EditFilled } from '@ant-design/icons'
 
 import { Button, Input, List, Tooltip } from 'antd'
+
+import { LocaleContext } from '../context/Locale.context'
 
 type EditableTextProps = {
   term: string
@@ -15,6 +17,7 @@ export const EditableText = ({
   saveChanges,
   openModal,
 }: EditableTextProps) => {
+  const { messages } = useContext(LocaleContext)
   const [opened, setOpened] = useState(false)
   const [innerText, setInnerText] = useState(term)
 
@@ -35,7 +38,7 @@ export const EditableText = ({
       size='small'
       onClick={handleSaveChanges}
     >
-      Salvar
+      {messages.save}
     </Button>,
     <Button
       type='primary'
@@ -44,7 +47,7 @@ export const EditableText = ({
       size='small'
       onClick={cancelChanges}
     >
-      Cancelar
+      {messages.cancel}
     </Button>,
   ]
 
@@ -55,7 +58,7 @@ export const EditableText = ({
           ? actions
           : [
               <Tooltip
-                title='Deletar'
+                title={messages.delete}
                 key='tooltipDelete'
               >
                 <Button
@@ -65,7 +68,7 @@ export const EditableText = ({
                 />
               </Tooltip>,
               <Tooltip
-                title='Editar'
+                title={messages.edit}
                 key='tooltipEdit'
               >
                 <Button
