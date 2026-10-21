@@ -1,7 +1,12 @@
 import { detectTechStack } from '../../techStack/detectTechStack'
+import { DetectedTechStack } from '../../techStack/techStack.type'
+import {
+  readCachedTechStack,
+  writeCachedTechStack,
+} from '../storage/techStackCache.repository'
 import {
   JOB_DETAILS_PANE_SELECTOR,
-  JobDescription,
+  findAboutTheJobBlock,
   readFullJobDescription,
   readJobIdFromPane,
 } from './jobDescription'
@@ -9,14 +14,13 @@ import { createTechStackPanel } from './renderTechStackPanel'
 
 const PANEL_SELECTOR = '.dlfl-tech-panel'
 const JOB_ID_ATTRIBUTE = 'data-dlfl-job-id'
+const RENDER_SIGNATURE_ATTRIBUTE = 'data-dlfl-render-signature'
 
 const observerOptions: MutationObserverInit = {
   childList: true,
   subtree: true,
   characterData: true,
 }
-
-const renderedTexts = new WeakMap<Element, string>()
 
 let observedPane: Element | null = null
 let paneObserver: MutationObserver | null = null
@@ -41,11 +45,16 @@ const findPanel = (pane: Element) => {
   return pane.querySelector<HTMLElement>(PANEL_SELECTOR)
 }
 
-const isPanelUpToDate = (panel: HTMLElement, description: JobDescription) => {
+const isPanelUpToDate = (
+  panel: HTMLElement,
+  aboutTheJobBlock: HTMLElement,
+  jobId: string,
+  renderSignature: string
+) => {
   return (
-    panel.parentElement === description.aboutTheJobBlock.parentElement &&
-    panel.getAttribute(JOB_ID_ATTRIBUTE) === description.jobId &&
-    renderedTexts.get(panel) === description.text
+    panel.parentElement === aboutTheJobBlock.parentElement &&
+    panel.getAttribute(JOB_ID_ATTRIBUTE) === jobId &&
+    panel.getAttribute(RENDER_SIGNATURE_ATTRIBUTE) === renderSignature
   )
 }
 
@@ -57,46 +66,74 @@ const removeStalePanel = (pane: Element) => {
   }
 }
 
-const renderPanel = (description: JobDescription) => {
-  const container = description.aboutTheJobBlock.parentElement
-
-  if (!container) {
+const renderPanel = (
+  aboutTheJobBlock: HTMLElement,
+  jobId: string,
+  stack: DetectedTechStack,
+  renderSignature: string
+) => {
+  if (!aboutTheJobBlock.parentElement) {
     return
   }
 
-  const panel = createTechStackPanel(detectTechStack(description.text))
-  panel.setAttribute(JOB_ID_ATTRIBUTE, description.jobId)
-  renderedTexts.set(panel, description.text)
-  container.prepend(panel)
+  const panel = createTechStackPanel(stack)
+  panel.setAttribute(JOB_ID_ATTRIBUTE, jobId)
+  panel.setAttribute(RENDER_SIGNATURE_ATTRIBUTE, renderSignature)
+  aboutTheJobBlock.before(panel)
 }
 
-const updatePanel = (pane: Element) => {
+export const updateTechStackPanel = (pane: Element) => {
   removeStalePanel(pane)
 
-  const description = readFullJobDescription(pane)
+  const aboutTheJobBlock = findAboutTheJobBlock(pane)
+  const jobId = readJobIdFromPane(pane)
 
-  if (!description) {
+  if (!aboutTheJobBlock || !jobId) {
+    return
+  }
+
+  const cachedStack = readCachedTechStack(jobId)
+  const description = readFullJobDescription(pane)
+  let stack: DetectedTechStack
+  let renderSignature: string
+
+  if (description) {
+    stack = detectTechStack(description.text)
+    writeCachedTechStack(jobId, stack)
+    renderSignature = description.text
+  } else if (cachedStack) {
+    stack = cachedStack
+    renderSignature = `cache:${jobId}`
+  } else {
     return
   }
 
   const currentPanel = findPanel(pane)
 
-  if (currentPanel && isPanelUpToDate(currentPanel, description)) {
+  if (
+    currentPanel &&
+    isPanelUpToDate(
+      currentPanel,
+      aboutTheJobBlock,
+      jobId,
+      renderSignature
+    )
+  ) {
     return
   }
 
   currentPanel?.remove()
-  renderPanel(description)
+  renderPanel(aboutTheJobBlock, jobId, stack, renderSignature)
 }
 
 const observePane = (pane: Element) => {
   paneObserver?.disconnect()
   observedPane = pane
   paneObserver = new MutationObserver(
-    throttleToAnimationFrame(() => updatePanel(pane))
+    throttleToAnimationFrame(() => updateTechStackPanel(pane))
   )
   paneObserver.observe(pane, observerOptions)
-  updatePanel(pane)
+  updateTechStackPanel(pane)
 }
 
 const attachToCurrentPane = () => {

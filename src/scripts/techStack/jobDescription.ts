@@ -13,8 +13,9 @@ export type JobDescription = {
 
 const readJobId = (aboutTheJobBlock: HTMLElement) => {
   const componentKey = aboutTheJobBlock.getAttribute('componentkey') ?? ''
+  const jobId = componentKey.slice(ABOUT_THE_JOB_PREFIX.length).trim()
 
-  return componentKey.slice(ABOUT_THE_JOB_PREFIX.length)
+  return jobId || null
 }
 
 const readTextNodes = (element: HTMLElement) => {
@@ -70,5 +71,11 @@ export const readFullJobDescription = (
     return null
   }
 
-  return { jobId: readJobId(aboutTheJobBlock), text, aboutTheJobBlock }
+  const jobId = readJobId(aboutTheJobBlock)
+
+  if (!jobId) {
+    return null
+  }
+
+  return { jobId, text, aboutTheJobBlock }
 }
