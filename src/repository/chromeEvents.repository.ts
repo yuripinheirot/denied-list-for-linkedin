@@ -3,6 +3,22 @@ type setItemModel = {
   value: any
 }
 
+export const getActiveTabUrl = () => {
+  return new Promise<string | undefined>((resolve) => {
+    chrome.tabs.query(
+      { active: true, currentWindow: true },
+      (tabs: chrome.tabs.Tab[]) => {
+        if (chrome.runtime.lastError) {
+          resolve(undefined)
+          return
+        }
+
+        resolve(tabs[0]?.url)
+      }
+    )
+  })
+}
+
 export const getItemLocalStorage = async <T = any>(key: string) => {
   return new Promise<T>((resolve) => {
     chrome.tabs.query(
