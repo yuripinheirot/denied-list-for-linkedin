@@ -144,6 +144,29 @@ describe('techStackPanel.script', () => {
     expect(pane.querySelector('.dlfl-tech-panel')).not.toBeNull()
   })
 
+  it('exibe labels curtos de IA e preserva os nomes na descricao', () => {
+    const text = 'Artificial Intelligence and Large Language Models'
+    const { pane, block } = createStackedPane('123', text, false)
+
+    updateTechStackPanel(pane)
+
+    const panel = pane.querySelector('.dlfl-tech-panel')
+    const textBox = block.querySelector(
+      '[data-testid="expandable-text-box"]'
+    ) as HTMLElement
+
+    expect(panel?.textContent).toContain('IA')
+    expect(panel?.textContent).toContain('LLMs')
+    expect(panel?.textContent).not.toContain('Artificial Intelligence')
+    expect(panel?.textContent).not.toContain('Large Language Models')
+    expect(textBox.textContent).toBe(text)
+    expect(
+      Array.from(textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)).map(
+        (highlight) => highlight.getAttribute('data-dlfl-tech-label')
+      )
+    ).toEqual(['IA', 'LLMs'])
+  })
+
   it('destaca todas as tecnologias sem alterar o texto da descricao', () => {
     const text = 'React, NODE, LangChain and <literal & text>'
     const { pane, block } = createStackedPane('123', text, false)

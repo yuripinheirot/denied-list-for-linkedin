@@ -75,6 +75,27 @@ describe('detectTechStack', () => {
     it('ASP.NET Core nao conta como .NET isolado', () => {
       expect(allLabels('ASP.NET Core')).toEqual(['ASP.NET Core'])
     })
+
+    it.each(['Elixir', 'elixir-lang', 'Elixir Lang'])(
+      '%s vira Elixir',
+      (text) => {
+        expect(allLabels(`Experiência com ${text}`)).toContain('Elixir')
+      }
+    )
+
+    it('detecta o ecossistema Elixir', () => {
+      expect(
+        allLabels('Elixir, Erlang, BEAM, Phoenix e Phoenix LiveView')
+      ).toEqual(
+        expect.arrayContaining([
+          'Elixir',
+          'Erlang',
+          'BEAM',
+          'Phoenix',
+          'Phoenix LiveView',
+        ])
+      )
+    })
   })
 
   describe('limites de palavra', () => {
@@ -139,10 +160,10 @@ describe('detectTechStack', () => {
       )
     ).toEqual(
       expect.arrayContaining([
-        'Artificial Intelligence',
-        'Machine Learning',
-        'Large Language Models',
-        'Retrieval-Augmented Generation',
+        'IA',
+        'ML',
+        'LLMs',
+        'RAG',
         'OpenAI',
         'GPT',
         'Anthropic',
@@ -157,6 +178,40 @@ describe('detectTechStack', () => {
     )
   })
 
+  it('mantem nomes completos de IA como aliases para labels curtos', () => {
+    expect(
+      allLabels(
+        'Artificial Intelligence, inteligência artificial, IA, ' +
+          'Deep Learning, DL, Computer Vision, CV, GenAI'
+      )
+    ).toEqual(expect.arrayContaining(['IA', 'DL', 'CV', 'GenAI']))
+  })
+
+  it('mantem um catalogo sem labels ou aliases duplicados dentro da definicao', () => {
+    const labels = techCatalog.map((technology) => technology.label)
+
+    expect(new Set(labels).size).toBe(labels.length)
+
+    for (const technology of techCatalog) {
+      const aliases = [
+        ...technology.aliases,
+        ...(technology.caseSensitiveAliases ?? []),
+      ]
+
+      expect(aliases.every((alias) => alias.trim().length > 0)).toBe(true)
+      expect(new Set(aliases).size).toBe(aliases.length)
+    }
+
+    expect(techCatalog).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'Elixir', category: 'backend' }),
+        expect.objectContaining({ label: 'Phoenix', category: 'backend' }),
+        expect.objectContaining({ label: 'IA', category: 'ai' }),
+        expect.objectContaining({ label: 'LLMs', category: 'ai' }),
+      ])
+    )
+  })
+
   it('retorna ocorrencias com offsets e remove sobreposicoes menores', () => {
     const text = 'Generative AI with LangGraph and AI'
     const occurrences = findTechOccurrences(text)
@@ -167,9 +222,9 @@ describe('detectTechStack', () => {
         text: text.slice(occurrence.start, occurrence.end),
       }))
     ).toEqual([
-      { label: 'Generative AI', text: 'Generative AI' },
+      { label: 'GenAI', text: 'Generative AI' },
       { label: 'LangGraph', text: 'LangGraph' },
-      { label: 'Artificial Intelligence', text: 'AI' },
+      { label: 'IA', text: 'AI' },
     ])
   })
 })
