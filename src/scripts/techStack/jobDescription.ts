@@ -4,6 +4,7 @@ const ABOUT_THE_JOB_PREFIX = 'JobDetails_AboutTheJob_'
 const ABOUT_THE_JOB_SELECTOR = `[componentkey^="${ABOUT_THE_JOB_PREFIX}"]`
 export const DESCRIPTION_TEXT_SELECTOR = '[data-testid="expandable-text-box"]'
 const EXPAND_BUTTON_SELECTOR = '[data-testid="expandable-text-button"]'
+const clickedExpandButtons = new WeakSet<HTMLElement>()
 
 export type JobDescription = {
   jobId: string
@@ -22,6 +23,22 @@ export const findDescriptionTextBox = (aboutTheJobBlock: HTMLElement) => {
   return aboutTheJobBlock.querySelector<HTMLElement>(
     DESCRIPTION_TEXT_SELECTOR
   )
+}
+
+export const expandDescriptionIfNeeded = (aboutTheJobBlock: HTMLElement) => {
+  const expandButton =
+    aboutTheJobBlock.querySelector<HTMLElement>(EXPAND_BUTTON_SELECTOR)
+
+  if (
+    !expandButton ||
+    !expandButton.getClientRects().length ||
+    clickedExpandButtons.has(expandButton)
+  ) {
+    return
+  }
+
+  clickedExpandButtons.add(expandButton)
+  expandButton.click()
 }
 
 export const readDescriptionText = (element: HTMLElement) => {

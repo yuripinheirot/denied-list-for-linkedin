@@ -6,6 +6,7 @@ import {
 } from '../storage/techStackCache.repository'
 import {
   JOB_DETAILS_PANE_SELECTOR,
+  expandDescriptionIfNeeded,
   findAboutTheJobBlock,
   readFullJobDescription,
   readJobIdFromPane,
@@ -97,6 +98,7 @@ export const updateTechStackPanel = (pane: Element) => {
   }
 
   const cachedStack = readCachedTechStack(jobId)
+  expandDescriptionIfNeeded(aboutTheJobBlock)
   const description = readFullJobDescription(pane)
   let stack: DetectedTechStack
   let renderSignature: string

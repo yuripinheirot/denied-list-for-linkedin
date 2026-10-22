@@ -29,8 +29,11 @@ const createStackedPane = (
   ) as HTMLElement
   textBox.textContent = text
 
+  let expandButton: HTMLButtonElement | null = null
+
   if (isTruncated) {
     const button = document.createElement('button')
+    expandButton = button
     button.setAttribute('data-testid', 'expandable-text-button')
     button.textContent = '… more'
     textBox.appendChild(button)
@@ -41,7 +44,7 @@ const createStackedPane = (
 
   document.body.appendChild(pane)
 
-  return { pane, block }
+  return { pane, block, expandButton }
 }
 
 describe('techStackPanel.script', () => {
@@ -52,6 +55,59 @@ describe('techStackPanel.script', () => {
 
   afterEach(() => {
     jest.restoreAllMocks()
+  })
+
+  it('expande automaticamente uma descricao truncada', () => {
+    const { pane, expandButton } = createStackedPane(
+      '123',
+      'React and Docker',
+      true
+    )
+    const button = expandButton as HTMLButtonElement
+    const clickSpy = jest.spyOn(button, 'click').mockImplementation(() => {
+      button.remove()
+    })
+
+    updateTechStackPanel(pane)
+
+    expect(clickSpy).toHaveBeenCalledTimes(1)
+    expect(readCachedTechStack('123')).toEqual(
+      detectTechStack('React and Docker')
+    )
+    expect(pane.querySelector('.dlfl-tech-panel')).not.toBeNull()
+  })
+
+  it('nao clica em um botao de expansao oculto', () => {
+    const { pane, expandButton } = createStackedPane(
+      '123',
+      'React and Docker',
+      true
+    )
+    const button = expandButton as HTMLButtonElement
+    const clickSpy = jest.spyOn(button, 'click')
+    ;(button.getClientRects as jest.Mock).mockReturnValue({
+      length: 0,
+    } as DOMRectList)
+
+    updateTechStackPanel(pane)
+
+    expect(clickSpy).not.toHaveBeenCalled()
+  })
+
+  it('nao repete o clique no mesmo botao em atualizacoes', () => {
+    const { pane, expandButton } = createStackedPane(
+      '123',
+      'React and Docker',
+      true
+    )
+    const clickSpy = jest
+      .spyOn(expandButton as HTMLButtonElement, 'click')
+      .mockImplementation(() => undefined)
+
+    updateTechStackPanel(pane)
+    updateTechStackPanel(pane)
+
+    expect(clickSpy).toHaveBeenCalledTimes(1)
   })
 
   it('renderiza uma stack cacheada mesmo com a descricao truncada', () => {
