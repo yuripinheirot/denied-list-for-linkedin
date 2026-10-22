@@ -212,6 +212,21 @@ describe('detectTechStack', () => {
     )
   })
 
+  it('mantem cobertura ampla nas quatro listas de tecnologias', () => {
+    const countByCategory = (category: string) =>
+      techCatalog.filter((technology) => technology.category === category)
+        .length
+
+    expect(countByCategory('frontend')).toBeGreaterThanOrEqual(80)
+    expect(countByCategory('backend')).toBeGreaterThanOrEqual(120)
+    expect(countByCategory('ai')).toBeGreaterThanOrEqual(110)
+    expect(countByCategory('additional')).toBeGreaterThanOrEqual(160)
+
+    expect(
+      allLabels('Preact, Delphi, Groq e Gitea')
+    ).toEqual(expect.arrayContaining(['Preact', 'Delphi', 'Groq', 'Gitea']))
+  })
+
   it('retorna ocorrencias com offsets e remove sobreposicoes menores', () => {
     const text = 'Generative AI with LangGraph and AI'
     const occurrences = findTechOccurrences(text)
