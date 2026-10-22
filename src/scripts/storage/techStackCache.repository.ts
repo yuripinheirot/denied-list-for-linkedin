@@ -5,7 +5,7 @@ import {
 } from '../../techStack/techStack.type'
 
 export const TECH_STACK_CACHE_STORAGE_KEY = 'dlfl-tech-stack-cache'
-export const TECH_STACK_CACHE_VERSION = 1
+export const TECH_STACK_CACHE_VERSION = 2
 
 type StoredTechStackCache = {
   version: number

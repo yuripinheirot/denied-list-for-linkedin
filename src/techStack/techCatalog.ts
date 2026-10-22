@@ -233,6 +233,159 @@ const backendTechs: TechDefinition[] = [
   { label: 'gRPC', category: 'backend', aliases: ['grpc'] },
 ]
 
+const aiTechs: TechDefinition[] = [
+  { label: 'Artificial Intelligence', category: 'ai', aliases: ['ai', 'a.i.'] },
+  {
+    label: 'Machine Learning',
+    category: 'ai',
+    aliases: ['machine learning', 'ml'],
+  },
+  { label: 'Deep Learning', category: 'ai', aliases: ['deep learning'] },
+  {
+    label: 'Generative AI',
+    category: 'ai',
+    aliases: ['generative ai', 'gen ai', 'genai'],
+  },
+  {
+    label: 'Large Language Models',
+    category: 'ai',
+    aliases: ['large language model', 'large language models', 'llm', 'llms'],
+  },
+  {
+    label: 'Natural Language Processing',
+    category: 'ai',
+    aliases: ['natural language processing', 'nlp'],
+  },
+  { label: 'Computer Vision', category: 'ai', aliases: ['computer vision'] },
+  {
+    label: 'Reinforcement Learning',
+    category: 'ai',
+    aliases: ['reinforcement learning', 'rl'],
+  },
+  {
+    label: 'Supervised Learning',
+    category: 'ai',
+    aliases: ['supervised learning'],
+  },
+  {
+    label: 'Unsupervised Learning',
+    category: 'ai',
+    aliases: ['unsupervised learning'],
+  },
+  { label: 'MLOps', category: 'ai', aliases: ['mlops', 'ml ops'] },
+  {
+    label: 'AI Agents',
+    category: 'ai',
+    aliases: ['ai agent', 'ai agents', 'intelligent agents'],
+  },
+  {
+    label: 'Retrieval-Augmented Generation',
+    category: 'ai',
+    aliases: ['retrieval-augmented generation', 'retrieval augmented generation', 'rag'],
+  },
+  {
+    label: 'Embeddings',
+    category: 'ai',
+    aliases: ['embedding', 'embeddings'],
+  },
+  {
+    label: 'Vector Database',
+    category: 'ai',
+    aliases: ['vector database', 'vector databases', 'vector db'],
+  },
+  {
+    label: 'Prompt Engineering',
+    category: 'ai',
+    aliases: ['prompt engineering', 'prompt engineer'],
+  },
+  {
+    label: 'Fine-tuning',
+    category: 'ai',
+    aliases: ['fine-tuning', 'fine tuning', 'finetuning'],
+  },
+  { label: 'OpenAI', category: 'ai', aliases: ['openai'] },
+  {
+    label: 'GPT',
+    category: 'ai',
+    aliases: ['gpt', 'gpt-3', 'gpt-3.5', 'gpt-4', 'gpt-4o', 'gpt 4'],
+  },
+  { label: 'ChatGPT', category: 'ai', aliases: ['chatgpt', 'chat gpt'] },
+  { label: 'Anthropic', category: 'ai', aliases: ['anthropic'] },
+  { label: 'Claude', category: 'ai', aliases: ['claude', 'claude 2', 'claude 3'] },
+  { label: 'Gemini', category: 'ai', aliases: ['gemini', 'google gemini'] },
+  { label: 'Mistral', category: 'ai', aliases: ['mistral', 'mistral ai'] },
+  { label: 'Llama', category: 'ai', aliases: ['llama', 'meta llama'] },
+  { label: 'Cohere', category: 'ai', aliases: ['cohere'] },
+  {
+    label: 'Hugging Face',
+    category: 'ai',
+    aliases: ['hugging face', 'huggingface'],
+  },
+  { label: 'Transformers', category: 'ai', aliases: ['transformer', 'transformers'] },
+  { label: 'LangChain', category: 'ai', aliases: ['langchain', 'lang chain'] },
+  {
+    label: 'LangGraph',
+    category: 'ai',
+    aliases: ['langgraph', 'lang graph', 'langraph'],
+  },
+  { label: 'LlamaIndex', category: 'ai', aliases: ['llamaindex', 'llama index'] },
+  { label: 'Haystack', category: 'ai', aliases: ['haystack'] },
+  {
+    label: 'Semantic Kernel',
+    category: 'ai',
+    aliases: ['semantic kernel'],
+  },
+  { label: 'AutoGen', category: 'ai', aliases: ['autogen', 'auto gen'] },
+  { label: 'CrewAI', category: 'ai', aliases: ['crewai', 'crew ai'] },
+  { label: 'DSPy', category: 'ai', aliases: ['dspy', 'dspy.ai'] },
+  { label: 'vLLM', category: 'ai', aliases: ['vllm', 'v llm'] },
+  { label: 'Ollama', category: 'ai', aliases: ['ollama'] },
+  { label: 'TensorFlow', category: 'ai', aliases: ['tensorflow', 'tensor flow'] },
+  { label: 'PyTorch', category: 'ai', aliases: ['pytorch', 'py torch'] },
+  { label: 'Keras', category: 'ai', aliases: ['keras'] },
+  {
+    label: 'scikit-learn',
+    category: 'ai',
+    aliases: ['scikit-learn', 'scikit learn', 'sklearn'],
+  },
+  { label: 'MLflow', category: 'ai', aliases: ['mlflow', 'ml flow'] },
+  {
+    label: 'Weights & Biases',
+    category: 'ai',
+    aliases: ['weights & biases', 'weights and biases', 'w&b'],
+  },
+  { label: 'Pinecone', category: 'ai', aliases: ['pinecone'] },
+  { label: 'Weaviate', category: 'ai', aliases: ['weaviate'] },
+  { label: 'Milvus', category: 'ai', aliases: ['milvus'] },
+  { label: 'ChromaDB', category: 'ai', aliases: ['chromadb', 'chroma db'] },
+  { label: 'pgvector', category: 'ai', aliases: ['pgvector', 'pg vector'] },
+  { label: 'FAISS', category: 'ai', aliases: ['faiss'] },
+  { label: 'Qdrant', category: 'ai', aliases: ['qdrant'] },
+  { label: 'ONNX', category: 'ai', aliases: ['onnx'] },
+  { label: 'TensorRT', category: 'ai', aliases: ['tensorrt', 'tensor rt'] },
+  { label: 'NVIDIA NeMo', category: 'ai', aliases: ['nvidia nemo', 'nemo'] },
+  {
+    label: 'AWS Bedrock',
+    category: 'ai',
+    aliases: ['aws bedrock', 'amazon bedrock', 'bedrock'],
+  },
+  {
+    label: 'Azure OpenAI',
+    category: 'ai',
+    aliases: ['azure openai'],
+  },
+  {
+    label: 'Vertex AI',
+    category: 'ai',
+    aliases: ['vertex ai', 'google vertex ai'],
+  },
+  {
+    label: 'Amazon SageMaker',
+    category: 'ai',
+    aliases: ['amazon sagemaker', 'sagemaker'],
+  },
+]
+
 const additionalTechs: TechDefinition[] = [
   {
     label: 'AWS',
@@ -371,5 +524,6 @@ const additionalTechs: TechDefinition[] = [
 export const techCatalog: readonly TechDefinition[] = [
   ...frontendTechs,
   ...backendTechs,
+  ...aiTechs,
   ...additionalTechs,
 ]

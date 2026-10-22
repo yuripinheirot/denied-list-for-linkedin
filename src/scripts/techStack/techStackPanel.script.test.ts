@@ -3,6 +3,7 @@ import {
   readCachedTechStack,
   writeCachedTechStack,
 } from '../storage/techStackCache.repository'
+import { TECH_HIGHLIGHT_CLASS } from './jobDescriptionHighlighter'
 import { updateTechStackPanel } from './techStackPanel.script'
 
 const createStackedPane = (
@@ -85,6 +86,88 @@ describe('techStackPanel.script', () => {
 
     expect(readCachedTechStack('123')).toEqual(detectTechStack(text))
     expect(pane.querySelector('.dlfl-tech-panel')).not.toBeNull()
+  })
+
+  it('destaca todas as tecnologias sem alterar o texto da descricao', () => {
+    const text = 'React, NODE, LangChain and <literal & text>'
+    const { pane, block } = createStackedPane('123', text, false)
+
+    updateTechStackPanel(pane)
+
+    const textBox = block.querySelector(
+      '[data-testid="expandable-text-box"]'
+    ) as HTMLElement
+    const highlights = Array.from(
+      textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)
+    )
+
+    expect(highlights.map((highlight) => highlight.textContent)).toEqual([
+      'React',
+      'NODE',
+      'LangChain',
+    ])
+    expect(textBox.textContent).toBe(text)
+  })
+
+  it('preserva elementos filhos e nao duplica destaques em atualizacoes', () => {
+    const { pane, block } = createStackedPane('123', '', false)
+    const textBox = block.querySelector(
+      '[data-testid="expandable-text-box"]'
+    ) as HTMLElement
+    const strong = document.createElement('strong')
+    const emphasis = document.createElement('em')
+    strong.textContent = 'Lang'
+    emphasis.textContent = 'PyTorch'
+    textBox.append(strong, document.createTextNode('Chain and '), emphasis)
+
+    updateTechStackPanel(pane)
+    updateTechStackPanel(pane)
+
+    expect(textBox.textContent).toBe('LangChain and PyTorch')
+    expect(textBox.querySelector('strong')).toBe(strong)
+    expect(textBox.querySelector('em')).toBe(emphasis)
+    expect(
+      Array.from(textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)).map(
+        (highlight) => [
+          highlight.getAttribute('data-dlfl-tech-label'),
+          highlight.textContent,
+        ]
+      )
+    ).toEqual([
+      ['LangChain', 'Lang'],
+      ['LangChain', 'Chain'],
+      ['PyTorch', 'PyTorch'],
+    ])
+    expect(
+      textBox.querySelectorAll(
+        `.${TECH_HIGHLIGHT_CLASS} .${TECH_HIGHLIGHT_CLASS}`
+      )
+    ).toHaveLength(0)
+  })
+
+  it('remove o destaque enquanto a descricao esta truncada e reaplica apos expandir', () => {
+    const { pane, block } = createStackedPane('123', 'React and Docker', false)
+    const textBox = block.querySelector(
+      '[data-testid="expandable-text-box"]'
+    ) as HTMLElement
+
+    updateTechStackPanel(pane)
+    expect(textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)).toHaveLength(2)
+
+    const button = document.createElement('button')
+    button.setAttribute('data-testid', 'expandable-text-button')
+    button.textContent = '… more'
+    jest
+      .spyOn(button, 'getClientRects')
+      .mockReturnValue({ length: 1 } as DOMRectList)
+    textBox.appendChild(button)
+
+    updateTechStackPanel(pane)
+    expect(textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)).toHaveLength(0)
+
+    button.remove()
+    updateTechStackPanel(pane)
+    expect(textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)).toHaveLength(2)
   })
 
   it('atualiza a cache quando uma descricao completa muda', () => {

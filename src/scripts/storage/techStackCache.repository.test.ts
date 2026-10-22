@@ -9,6 +9,7 @@ import {
 const emptyStack: DetectedTechStack = {
   frontend: [],
   backend: [],
+  ai: [],
   additional: [],
 }
 
@@ -41,7 +42,10 @@ describe('techStackCache.repository', () => {
 
   it.each([
     'not-json',
-    JSON.stringify({ version: 2, jobs: { '123': reactStack } }),
+    JSON.stringify({
+      version: TECH_STACK_CACHE_VERSION - 1,
+      jobs: { '123': reactStack },
+    }),
     JSON.stringify({ version: TECH_STACK_CACHE_VERSION, jobs: { '123': [] } }),
   ])('ignora cache invalida: %s', (value) => {
     localStorage.setItem(TECH_STACK_CACHE_STORAGE_KEY, value)

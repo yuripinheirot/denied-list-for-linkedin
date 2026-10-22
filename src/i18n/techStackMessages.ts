@@ -13,6 +13,7 @@ const ptBR: TechStackMessages = {
   categories: {
     frontend: 'Frontend',
     backend: 'Backend',
+    ai: 'Inteligência Artificial',
     additional: 'Adicionais',
   },
 }
@@ -23,6 +24,7 @@ const en: TechStackMessages = {
   categories: {
     frontend: 'Frontend',
     backend: 'Backend',
+    ai: 'AI',
     additional: 'Additional',
   },
 }

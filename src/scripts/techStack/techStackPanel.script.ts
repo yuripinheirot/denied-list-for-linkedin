@@ -10,6 +10,10 @@ import {
   readFullJobDescription,
   readJobIdFromPane,
 } from './jobDescription'
+import {
+  clearTechHighlights,
+  highlightTechOccurrences,
+} from './jobDescriptionHighlighter'
 import { createTechStackPanel } from './renderTechStackPanel'
 
 const PANEL_SELECTOR = '.dlfl-tech-panel'
@@ -100,11 +104,14 @@ export const updateTechStackPanel = (pane: Element) => {
   if (description) {
     stack = detectTechStack(description.text)
     writeCachedTechStack(jobId, stack)
+    highlightTechOccurrences(description.aboutTheJobBlock)
     renderSignature = description.text
   } else if (cachedStack) {
+    clearTechHighlights(aboutTheJobBlock)
     stack = cachedStack
     renderSignature = `cache:${jobId}`
   } else {
+    clearTechHighlights(aboutTheJobBlock)
     return
   }
 

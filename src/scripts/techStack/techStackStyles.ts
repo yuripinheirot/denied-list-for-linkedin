@@ -65,6 +65,11 @@ const TECH_STACK_CSS = `
   font-size: 12px;
   opacity: 0.7;
 }
+.dlfl-tech-highlight {
+  color: #000 !important;
+  background-color: #fff200 !important;
+  border-radius: 2px;
+}
 `
 
 export const ensureTechStackStyles = () => {

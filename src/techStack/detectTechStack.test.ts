@@ -1,17 +1,23 @@
 import { gmMotorsportsDescription } from './__fixtures__/gmMotorsportsDescription'
-import { detectTechStack, hasDetectedTechs } from './detectTechStack'
+import {
+  detectTechStack,
+  findTechOccurrences,
+  hasDetectedTechs,
+} from './detectTechStack'
+import { techCatalog } from './techCatalog'
 import { DetectedTechStack } from './techStack.type'
 
 const labelsOf = (stack: DetectedTechStack) => ({
   frontend: stack.frontend.map((tech) => tech.label),
   backend: stack.backend.map((tech) => tech.label),
+  ai: stack.ai.map((tech) => tech.label),
   additional: stack.additional.map((tech) => tech.label),
 })
 
 const allLabels = (text: string) => {
   const labels = labelsOf(detectTechStack(text))
 
-  return [...labels.frontend, ...labels.backend, ...labels.additional]
+  return [...labels.frontend, ...labels.backend, ...labels.ai, ...labels.additional]
 }
 
 describe('detectTechStack', () => {
@@ -19,6 +25,7 @@ describe('detectTechStack', () => {
     expect(labelsOf(detectTechStack(gmMotorsportsDescription))).toEqual({
       frontend: ['React'],
       backend: ['C#', '.NET'],
+      ai: [],
       additional: ['Azure', 'Agile/Scrum', 'CI/CD', 'Electron'],
     })
   })
@@ -116,5 +123,53 @@ describe('detectTechStack', () => {
       { label: 'AWS', count: 2 },
     ])
     expect(stack.backend).toEqual([{ label: 'Kafka', count: 1 }])
+  })
+
+  it('mantem um catalogo dedicado com pelo menos 40 tecnologias de AI', () => {
+    const aiTechnologies = techCatalog.filter(
+      (technology) => technology.category === 'ai'
+    )
+
+    expect(aiTechnologies.length).toBeGreaterThanOrEqual(40)
+
+    expect(
+      allLabels(
+        'AI, machine learning, LLMs, RAG, OpenAI, GPT-4, Anthropic, ' +
+          'Claude, Gemini, LangChain, Langraph, PyTorch, Pinecone and Qdrant'
+      )
+    ).toEqual(
+      expect.arrayContaining([
+        'Artificial Intelligence',
+        'Machine Learning',
+        'Large Language Models',
+        'Retrieval-Augmented Generation',
+        'OpenAI',
+        'GPT',
+        'Anthropic',
+        'Claude',
+        'Gemini',
+        'LangChain',
+        'LangGraph',
+        'PyTorch',
+        'Pinecone',
+        'Qdrant',
+      ])
+    )
+  })
+
+  it('retorna ocorrencias com offsets e remove sobreposicoes menores', () => {
+    const text = 'Generative AI with LangGraph and AI'
+    const occurrences = findTechOccurrences(text)
+
+    expect(
+      occurrences.map((occurrence) => ({
+        label: occurrence.label,
+        text: text.slice(occurrence.start, occurrence.end),
+      }))
+    ).toEqual([
+      { label: 'Generative AI', text: 'Generative AI' },
+      { label: 'LangGraph', text: 'LangGraph' },
+      { label: 'Artificial Intelligence', text: 'AI' },
+    ])
   })
 })
