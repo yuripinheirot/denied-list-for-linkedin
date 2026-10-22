@@ -52,6 +52,10 @@ const TECH_STACK_CSS = `
   color: #2e9e6a;
   background: rgba(68, 179, 127, 0.16);
 }
+.dlfl-tech-badge--ai {
+  color: #0891b2;
+  background: rgba(6, 182, 212, 0.16);
+}
 .dlfl-tech-badge--additional {
   color: inherit;
   background: rgba(128, 128, 128, 0.18);
