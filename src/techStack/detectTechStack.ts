@@ -1,5 +1,9 @@
 import { foldForMatch, stripAccents } from '../deniedList/foldForMatch'
 import { buildTechMatchers, TechMatcher } from './buildTechMatchers'
+import {
+  detectEnglishProficiency,
+  findEnglishProficiencyOccurrences,
+} from './detectEnglishProficiency'
 import { techCatalog } from './techCatalog'
 import {
   DetectedTech,
@@ -168,11 +172,15 @@ const resolveOverlappingOccurrences = (occurrences: TechOccurrence[]) => {
 
 export const findTechOccurrences = (text: string): TechOccurrence[] => {
   const texts = createMatchTexts(text)
-  const occurrences = techMatchers.flatMap((matcher) =>
+  const technologyOccurrences = techMatchers.flatMap((matcher) =>
     findMatcherOccurrences(matcher, texts)
   )
+  const englishOccurrences = findEnglishProficiencyOccurrences(text)
 
-  return resolveOverlappingOccurrences(occurrences)
+  return resolveOverlappingOccurrences([
+    ...technologyOccurrences,
+    ...englishOccurrences,
+  ])
 }
 
 const createEmptyStack = (): DetectedTechStack => {
@@ -181,6 +189,7 @@ const createEmptyStack = (): DetectedTechStack => {
     backend: [],
     ai: [],
     additional: [],
+    english: [],
   }
 }
 
@@ -201,6 +210,12 @@ export const detectTechStack = (text: string): DetectedTechStack => {
         count,
       })
     }
+  }
+
+  const englishProficiency = detectEnglishProficiency(text)
+
+  if (englishProficiency) {
+    stack.english.push(englishProficiency)
   }
 
   for (const category of TECH_CATEGORIES) {

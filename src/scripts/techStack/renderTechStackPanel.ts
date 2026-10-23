@@ -23,11 +23,30 @@ const createElement = (tagName: string, className: string, text?: string) => {
   return element
 }
 
-const createBadge = (tech: DetectedTech, category: TechCategory) => {
+const formatBadgeLabel = (
+  tech: DetectedTech,
+  category: TechCategory,
+  messages: TechStackMessages
+) => {
+  if (category !== 'english') {
+    return tech.label
+  }
+
+  return tech.label
+    .split(' / ')
+    .map((part) => messages.englishLevels[part] ?? part)
+    .join(' / ')
+}
+
+const createBadge = (
+  tech: DetectedTech,
+  category: TechCategory,
+  messages: TechStackMessages
+) => {
   const badge = createElement(
     'span',
     `dlfl-tech-badge dlfl-tech-badge--${category}`,
-    tech.label
+    formatBadgeLabel(tech, category, messages)
   )
 
   if (tech.count > 1) {
@@ -46,7 +65,7 @@ const createCategoryRow = (
   const badges = createElement('div', 'dlfl-tech-badges')
 
   for (const tech of techs) {
-    badges.appendChild(createBadge(tech, category))
+    badges.appendChild(createBadge(tech, category, messages))
   }
 
   row.append(

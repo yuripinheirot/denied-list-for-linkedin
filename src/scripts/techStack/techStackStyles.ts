@@ -60,6 +60,10 @@ const TECH_STACK_CSS = `
   color: inherit;
   background: rgba(128, 128, 128, 0.18);
 }
+.dlfl-tech-badge--english {
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.16);
+}
 .dlfl-tech-count {
   font-weight: 400;
   opacity: 0.75;

@@ -167,6 +167,31 @@ describe('techStackPanel.script', () => {
     ).toEqual(['IA', 'LLMs'])
   })
 
+  it('renderiza o nivel de ingles como badge e destaca a descricao', () => {
+    const text = 'Nível de inglês: Intermediário / B2'
+    const { pane, block } = createStackedPane('123', text, false)
+
+    updateTechStackPanel(pane)
+
+    const panel = pane.querySelector('.dlfl-tech-panel')
+    const textBox = block.querySelector(
+      '[data-testid="expandable-text-box"]'
+    ) as HTMLElement
+
+    expect(panel?.textContent).toContain('English proficiency')
+    expect(panel?.textContent).toContain('B2 / Intermediate')
+    const highlights = Array.from(
+      textBox.querySelectorAll(`.${TECH_HIGHLIGHT_CLASS}`)
+    )
+
+    expect(highlights.map((highlight) => highlight.textContent)).toEqual([
+      'inglês: Intermediário / B2',
+    ])
+    expect(
+      highlights[0].getAttribute('data-dlfl-tech-label')
+    ).toBe('B2 / Intermediate')
+  })
+
   it('destaca todas as tecnologias sem alterar o texto da descricao', () => {
     const text = 'React, NODE, LangChain and <literal & text>'
     const { pane, block } = createStackedPane('123', text, false)

@@ -12,6 +12,7 @@ const labelsOf = (stack: DetectedTechStack) => ({
   backend: stack.backend.map((tech) => tech.label),
   ai: stack.ai.map((tech) => tech.label),
   additional: stack.additional.map((tech) => tech.label),
+  english: stack.english.map((tech) => tech.label),
 })
 
 const allLabels = (text: string) => {
@@ -27,6 +28,7 @@ describe('detectTechStack', () => {
       backend: ['C#', '.NET'],
       ai: [],
       additional: ['Azure', 'Agile/Scrum', 'CI/CD', 'Electron'],
+      english: [],
     })
   })
 
@@ -133,6 +135,50 @@ describe('detectTechStack', () => {
       ['Systems programming in Rust', 'Rust'],
     ])('"%s" detecta %s', (text, label) => {
       expect(allLabels(text)).toContain(label)
+    })
+  })
+
+  describe('proficiência em inglês', () => {
+    it.each([
+      ['English level A1', 'A1'],
+      ['A 2 English', 'A2'],
+      ['English: B1', 'B1'],
+      ['Nível de inglês: Intermediário / B2', 'B2 / Intermediate'],
+      ['English upper-intermediate', 'Upper-intermediate'],
+      ['C1 de inglês', 'C1'],
+      ['ingles fluente', 'Fluent'],
+      ['Native English speaker', 'Native'],
+    ])('detecta "%s" como %s', (text, label) => {
+      expect(detectTechStack(text).english).toEqual([
+        { label, count: 1 },
+      ])
+    })
+
+    it.each([
+      'Fluent communication skills',
+      'Advanced React skills',
+      'English required. Advanced React skills',
+      'A B2 database experience',
+    ])('nao cria proficiência sem contexto válido: "%s"', (text) => {
+      expect(detectTechStack(text).english).toEqual([])
+    })
+
+    it('retorna o trecho contextual para highlight', () => {
+      const text = 'Nível de inglês: Intermediário / B2'
+
+      expect(
+        findTechOccurrences(text)
+          .filter((occurrence) => occurrence.category === 'english')
+          .map((occurrence) => ({
+            label: occurrence.label,
+            text: text.slice(occurrence.start, occurrence.end),
+          }))
+      ).toEqual([
+        {
+          label: 'B2 / Intermediate',
+          text: 'inglês: Intermediário / B2',
+        },
+      ])
     })
   })
 

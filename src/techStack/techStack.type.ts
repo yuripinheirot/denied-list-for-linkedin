@@ -3,6 +3,7 @@ export const TECH_CATEGORIES = [
   'backend',
   'ai',
   'additional',
+  'english',
 ] as const
 
 export type TechCategory = (typeof TECH_CATEGORIES)[number]

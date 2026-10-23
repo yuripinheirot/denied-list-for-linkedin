@@ -11,11 +11,17 @@ const emptyStack: DetectedTechStack = {
   backend: [],
   ai: [],
   additional: [],
+  english: [],
 }
 
 const reactStack: DetectedTechStack = {
   ...emptyStack,
   frontend: [{ label: 'React', count: 1 }],
+}
+
+const englishStack: DetectedTechStack = {
+  ...emptyStack,
+  english: [{ label: 'B2 / Intermediate', count: 1 }],
 }
 
 describe('techStackCache.repository', () => {
@@ -32,6 +38,12 @@ describe('techStackCache.repository', () => {
 
     expect(readCachedTechStack('123')).toEqual(reactStack)
     expect(readCachedTechStack('456')).toBeNull()
+  })
+
+  it('preserva o nivel de ingles na cache', () => {
+    writeCachedTechStack('123', englishStack)
+
+    expect(readCachedTechStack('123')).toEqual(englishStack)
   })
 
   it('preserva uma stack vazia como resultado cacheado', () => {
