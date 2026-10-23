@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons'
 
@@ -10,6 +10,7 @@ import { SettingRow } from '../components/SettingRow'
 import { AppConfigContext } from '../context/AppConfig.context'
 import { DeniedListContext } from '../context/DeniedList.context'
 import { LocaleContext } from '../context/Locale.context'
+import { foldForMatch } from '../deniedList/foldForMatch'
 
 const { info, confirm, destroyAll } = Modal
 
@@ -17,6 +18,18 @@ export const MainView = () => {
   const { appConfig, appConfigActions } = useContext(AppConfigContext)
   const { deniedList, deniedListActions } = useContext(DeniedListContext)
   const { messages } = useContext(LocaleContext)
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const normalizedSearchTerm = foldForMatch(searchTerm.trim())
+  const filteredDeniedList = normalizedSearchTerm
+    ? deniedList.filter((term) =>
+        foldForMatch(term).includes(normalizedSearchTerm),
+      )
+    : deniedList
+  const emptyListDescription =
+    deniedList.length > 0 && filteredDeniedList.length === 0
+      ? messages.noSearchResults
+      : messages.emptyDeniedList
 
   const handleDeleteModal = (term: string) => {
     confirm({
@@ -119,14 +132,21 @@ export const MainView = () => {
             {messages.newTermAction}
           </Button>
         </Flex>
+        <Input
+          allowClear
+          aria-label={messages.searchDeniedList}
+          placeholder={messages.searchDeniedList}
+          value={searchTerm}
+          onChange={(event) => setSearchTerm(event.target.value)}
+        />
         <List
           itemLayout='horizontal'
-          dataSource={deniedList}
+          dataSource={filteredDeniedList}
           locale={{
             emptyText: (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={messages.emptyDeniedList}
+                description={emptyListDescription}
               />
             ),
           }}

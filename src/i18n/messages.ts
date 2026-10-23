@@ -14,6 +14,8 @@ export type Messages = {
   deniedListSection: string
   newTermAction: string
   emptyDeniedList: string
+  noSearchResults: string
+  searchDeniedList: string
   deleteTermTitle: string
   cancel: string
   delete: string
@@ -36,6 +38,8 @@ const ptBR: Messages = {
   deniedListSection: 'Denied list',
   newTermAction: 'Nova',
   emptyDeniedList: 'Nenhum termo na denied list',
+  noSearchResults: 'Nenhum termo encontrado',
+  searchDeniedList: 'Buscar na denied list',
   deleteTermTitle: 'Deseja realmente deletar este termo?',
   cancel: 'Cancelar',
   delete: 'Deletar',
@@ -60,6 +64,8 @@ const en: Messages = {
   deniedListSection: 'Denied list',
   newTermAction: 'New',
   emptyDeniedList: 'No terms in the denied list',
+  noSearchResults: 'No terms found',
+  searchDeniedList: 'Search the denied list',
   deleteTermTitle: 'Do you really want to delete this term?',
   cancel: 'Cancel',
   delete: 'Delete',
