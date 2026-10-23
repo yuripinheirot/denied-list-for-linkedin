@@ -39,6 +39,8 @@ export type EnglishProficiencyOccurrence = {
 
 const MAX_CONTEXT_DISTANCE = 80
 const CONTEXT_BREAK_PATTERN = /[.!?\n;]/u
+const GENERIC_DESCRIPTOR_FOLLOWING_WORD_PATTERN =
+  /^\s+(?:communication|concepts|experience|familiarity|knowledge|skills|understanding)(?![\p{L}\p{N}_])/u
 
 const languageAliases = [
   'english',
@@ -309,17 +311,29 @@ const resolveOverlappingMatches = (matches: TextMatch[]) => {
   return selectedMatches
 }
 
+const isGenericDescriptorUse = (match: TextMatch, text: string) => {
+  if (match.definition.cefr) {
+    return false
+  }
+
+  const followingText = text.slice(match.end)
+
+  return GENERIC_DESCRIPTOR_FOLLOWING_WORD_PATTERN.test(followingText)
+}
+
 const findContextualLevelMatches = (text: string) => {
   const languageMatches = findLanguageMatches(text)
   const matches = levelMatchers.flatMap(({ definition, pattern }) =>
     findMatches(text, pattern, definition)
   )
 
-  return resolveOverlappingMatches(matches).filter((match) =>
-    languageMatches.some((languageMatch) =>
-      sharesContext(match, languageMatch, text)
+  return resolveOverlappingMatches(matches)
+    .filter((match) => !isGenericDescriptorUse(match, text))
+    .filter((match) =>
+      languageMatches.some((languageMatch) =>
+        sharesContext(match, languageMatch, text)
+      )
     )
-  )
 }
 
 const findClosestDescriptor = (

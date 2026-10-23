@@ -143,6 +143,7 @@ describe('detectTechStack', () => {
       ['English level A1', 'A1'],
       ['A 2 English', 'A2'],
       ['English: B1', 'B1'],
+      ['English: Basic', 'Basic'],
       ['Nível de inglês: Intermediário / B2', 'B2 / Intermediate'],
       ['English upper-intermediate', 'Upper-intermediate'],
       ['C1 de inglês', 'C1'],
@@ -159,8 +160,23 @@ describe('detectTechStack', () => {
       'Advanced React skills',
       'English required. Advanced React skills',
       'A B2 database experience',
+      'Basic understanding of software development lifecycle (SDLC)',
+      'English: Basic understanding of software development lifecycle (SDLC)',
+      'English required for basic communication skills',
+      'English required for basic knowledge of software development',
     ])('nao cria proficiência sem contexto válido: "%s"', (text) => {
       expect(detectTechStack(text).english).toEqual([])
+    })
+
+    it('nao destaca "basic understanding" como proficiência', () => {
+      const text =
+        'English is useful, basic understanding of software development lifecycle (SDLC)'
+
+      expect(
+        findTechOccurrences(text).filter(
+          (occurrence) => occurrence.category === 'english'
+        )
+      ).toEqual([])
     })
 
     it('retorna o trecho contextual para highlight', () => {
