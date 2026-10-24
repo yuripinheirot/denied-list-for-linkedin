@@ -144,6 +144,18 @@ describe('techStackPanel.script', () => {
     expect(pane.querySelector('.dlfl-tech-panel')).not.toBeNull()
   })
 
+  it('nao exibe a quantidade de ocorrencias nos badges', () => {
+    const { pane } = createStackedPane('123', 'React and React', false)
+
+    updateTechStackPanel(pane)
+
+    const panel = pane.querySelector('.dlfl-tech-panel')
+
+    expect(panel?.textContent).toContain('React')
+    expect(panel?.textContent).not.toContain('×2')
+    expect(panel?.querySelector('.dlfl-tech-count')).toBeNull()
+  })
+
   it('exibe labels curtos de IA e preserva os nomes na descricao', () => {
     const text = 'Artificial Intelligence and Large Language Models'
     const { pane, block } = createStackedPane('123', text, false)

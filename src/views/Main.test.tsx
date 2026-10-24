@@ -63,6 +63,21 @@ describe('MainView', () => {
     expect(screen.getByText('Café')).toBeTruthy()
   })
 
+  it('renders denied terms from newest to oldest', () => {
+    renderMainView(['React', 'Café', 'TypeScript'])
+
+    const renderedTerms = ['TypeScript', 'Café', 'React'].map((term) =>
+      screen.getByText(term),
+    )
+
+    expect(
+      renderedTerms[0].compareDocumentPosition(renderedTerms[1]),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(
+      renderedTerms[1].compareDocumentPosition(renderedTerms[2]),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+
   it('filters by substring without considering case or accents', () => {
     renderMainView(['Café', 'JavaScript', 'Python'])
 

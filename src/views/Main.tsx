@@ -20,12 +20,13 @@ export const MainView = () => {
   const { messages } = useContext(LocaleContext)
   const [searchTerm, setSearchTerm] = useState('')
 
+  const orderedDeniedList = [...deniedList].reverse()
   const normalizedSearchTerm = foldForMatch(searchTerm.trim())
   const filteredDeniedList = normalizedSearchTerm
-    ? deniedList.filter((term) =>
+    ? orderedDeniedList.filter((term) =>
         foldForMatch(term).includes(normalizedSearchTerm),
       )
-    : deniedList
+    : orderedDeniedList
   const emptyListDescription =
     deniedList.length > 0 && filteredDeniedList.length === 0
       ? messages.noSearchResults

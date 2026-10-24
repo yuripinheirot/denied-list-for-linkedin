@@ -49,10 +49,6 @@ const createBadge = (
     formatBadgeLabel(tech, category, messages)
   )
 
-  if (tech.count > 1) {
-    badge.appendChild(createElement('span', 'dlfl-tech-count', `×${tech.count}`))
-  }
-
   return badge
 }
 
