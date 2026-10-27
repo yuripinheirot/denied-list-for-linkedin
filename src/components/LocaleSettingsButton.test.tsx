@@ -1,6 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import { initialAppConfig } from '../appConfig/parseAppConfig'
+import { AppConfigContext } from '../context/AppConfig.context'
 import { LocaleProvider } from '../context/Locale.context'
 import { Locale } from '../types/Locale.type'
 import { LocaleSettingsButton } from './LocaleSettingsButton'
@@ -27,10 +29,18 @@ const installChromeStorage = () => {
   } as unknown as typeof chrome
 }
 
-const renderSettings = () => {
+const renderSettings = (
+  appConfig = initialAppConfig,
+  appConfigActions = {
+    setActiveStatus: async () => {},
+    setAutoClosePostApplyModal: async () => {},
+  },
+) => {
   render(
     <LocaleProvider>
-      <LocaleSettingsButton />
+      <AppConfigContext.Provider value={{ appConfig, appConfigActions }}>
+        <LocaleSettingsButton />
+      </AppConfigContext.Provider>
     </LocaleProvider>,
   )
 }
@@ -62,5 +72,32 @@ describe('LocaleSettingsButton', () => {
     })
     expect(storage.locale).toBe<Locale>('en')
     expect(document.documentElement.lang).toBe('en')
+  })
+
+  it('exibe e altera as configuracoes da extensao dentro do painel', () => {
+    const setActiveStatus = jest.fn(async () => {})
+    const setAutoClosePostApplyModal = jest.fn(async () => {})
+
+    renderSettings(initialAppConfig, {
+      setActiveStatus,
+      setAutoClosePostApplyModal,
+    })
+
+    userEvent.click(
+      screen.getByRole('button', {
+        name: 'Settings',
+      }),
+    )
+
+    const switches = screen.getAllByRole('switch')
+
+    expect(switches).toHaveLength(2)
+    expect(switches[0].getAttribute('aria-checked')).toBe('true')
+    expect(switches[1].getAttribute('aria-checked')).toBe('true')
+
+    userEvent.click(switches[1])
+
+    expect(setAutoClosePostApplyModal).toHaveBeenCalledWith(false)
+    expect(setActiveStatus).not.toHaveBeenCalled()
   })
 })

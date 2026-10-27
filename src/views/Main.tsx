@@ -6,8 +6,6 @@ import { Button, Empty, Flex, Form, Input, List, Modal, Typography } from 'antd'
 
 import { EditableText } from '../components/EditableText'
 import { PopupHeader } from '../components/PopupHeader'
-import { SettingRow } from '../components/SettingRow'
-import { AppConfigContext } from '../context/AppConfig.context'
 import { DeniedListContext } from '../context/DeniedList.context'
 import { LocaleContext } from '../context/Locale.context'
 import { foldForMatch } from '../deniedList/foldForMatch'
@@ -15,7 +13,6 @@ import { foldForMatch } from '../deniedList/foldForMatch'
 const { info, confirm, destroyAll } = Modal
 
 export const MainView = () => {
-  const { appConfig, appConfigActions } = useContext(AppConfigContext)
   const { deniedList, deniedListActions } = useContext(DeniedListContext)
   const { messages } = useContext(LocaleContext)
   const [searchTerm, setSearchTerm] = useState('')
@@ -101,22 +98,6 @@ export const MainView = () => {
       gap={20}
     >
       <PopupHeader />
-      <SettingRow
-        label={messages.extensionActive}
-        description={messages.extensionActiveDescription}
-        checked={appConfig.active}
-        onChange={(checked) => {
-          void appConfigActions.setActiveStatus(checked)
-        }}
-      />
-      <SettingRow
-        label={messages.autoClosePostApplyModal}
-        description={messages.autoClosePostApplyModalDescription}
-        checked={appConfig.autoClosePostApplyModal}
-        onChange={(checked) => {
-          void appConfigActions.setAutoClosePostApplyModal(checked)
-        }}
-      />
 
       <Flex
         vertical

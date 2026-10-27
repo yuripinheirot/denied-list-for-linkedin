@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { initialAppConfig } from '../appConfig/parseAppConfig'
-import { AppConfigContext } from '../context/AppConfig.context'
 import { DeniedListContext } from '../context/DeniedList.context'
 import { LocaleContext } from '../context/Locale.context'
 import { messagesByLocale } from '../i18n/messages'
@@ -17,28 +15,18 @@ const renderMainView = (deniedList: string[]) => {
         setLocale: async () => {},
       }}
     >
-      <AppConfigContext.Provider
+      <DeniedListContext.Provider
         value={{
-          appConfig: initialAppConfig,
-          appConfigActions: {
-            setActiveStatus: async () => {},
-            setAutoClosePostApplyModal: async () => {},
+          deniedList,
+          deniedListActions: {
+            create: async () => {},
+            update: async () => {},
+            delete: async () => {},
           },
         }}
       >
-        <DeniedListContext.Provider
-          value={{
-            deniedList,
-            deniedListActions: {
-              create: async () => {},
-              update: async () => {},
-              delete: async () => {},
-            },
-          }}
-        >
-          <MainView />
-        </DeniedListContext.Provider>
-      </AppConfigContext.Provider>
+        <MainView />
+      </DeniedListContext.Provider>
     </LocaleContext.Provider>,
   )
 }
@@ -57,15 +45,6 @@ beforeAll(() => {
 })
 
 describe('MainView', () => {
-  it('renders the extension and modal auto-close settings', () => {
-    renderMainView([])
-
-    expect(screen.getAllByRole('switch')).toHaveLength(2)
-    expect(
-      screen.getByText('Close the application modal automatically'),
-    ).toBeTruthy()
-  })
-
   it('renders all denied terms without a search query', () => {
     renderMainView(['React', 'Café'])
 
