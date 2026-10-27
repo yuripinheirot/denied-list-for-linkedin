@@ -73,6 +73,53 @@ describe('post-apply modal observer', () => {
     expect(closeHandler).toHaveBeenCalledTimes(1)
   })
 
+  it('closes a native dialog through its dismiss button', () => {
+    const dialog = document.createElement('dialog')
+    dialog.innerHTML = `
+      <button aria-label="Dismiss" type="button"></button>
+      <button type="button">Not now</button>
+    `
+    const dismissButton = dialog.querySelector(
+      'button[aria-label="Dismiss"]',
+    ) as HTMLButtonElement
+    const notNowButton = Array.from(dialog.querySelectorAll('button')).find(
+      (button) => button.textContent?.trim() === 'Not now',
+    ) as HTMLButtonElement
+    const dismissHandler = jest.fn()
+    const notNowHandler = jest.fn()
+
+    dismissButton.addEventListener('click', dismissHandler)
+    notNowButton.addEventListener('click', notNowHandler)
+    document.body.append(dialog)
+
+    startPostApplyModalObserver()
+
+    expect(dismissHandler).toHaveBeenCalledTimes(1)
+    expect(notNowHandler).not.toHaveBeenCalled()
+  })
+
+  it('closes the post-apply dialog through Not now without the modal wrapper', () => {
+    const dialog = document.createElement('div')
+    dialog.setAttribute('role', 'dialog')
+    dialog.innerHTML = `
+      <button
+        data-view-name="seeker-next-best-action-card-cta-with-impression"
+        type="button"
+      >
+        Not now
+      </button>
+    `
+    const notNowButton = dialog.querySelector('button') as HTMLButtonElement
+    const closeHandler = jest.fn()
+
+    notNowButton.addEventListener('click', closeHandler)
+    document.body.append(dialog)
+
+    startPostApplyModalObserver()
+
+    expect(closeHandler).toHaveBeenCalledTimes(1)
+  })
+
   it('closes a modal when it becomes visible', async () => {
     startPostApplyModalObserver()
 
