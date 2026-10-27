@@ -16,11 +16,13 @@ export const AppConfigContext = createContext<{
   appConfig: AppConfigType
   appConfigActions: {
     setActiveStatus: (status: boolean) => Promise<void>
+    setAutoClosePostApplyModal: (status: boolean) => Promise<void>
   }
 }>({
   appConfig: initialAppConfig,
   appConfigActions: {
     setActiveStatus: async () => {},
+    setAutoClosePostApplyModal: async () => {},
   },
 })
 
@@ -58,16 +60,27 @@ export const AppConfigProvider = ({ children }: AppConfigProviderProps) => {
     setAppConfig(config)
   }
 
+  const updateConfig = async (nextConfig: AppConfigType) => {
+    await setItemLocalStorage({
+      key: KeysStorage.APP_CONFIG,
+      value: nextConfig,
+    })
+    setAppConfig(nextConfig)
+    await executeFilterOnActiveTab()
+  }
+
   const appConfigActions = {
     setActiveStatus: async (status: boolean) => {
-      const nextConfig = { active: status }
-
-      await setItemLocalStorage({
-        key: KeysStorage.APP_CONFIG,
-        value: nextConfig,
+      await updateConfig({
+        ...appConfig,
+        active: status,
       })
-      setAppConfig(nextConfig)
-      await executeFilterOnActiveTab()
+    },
+    setAutoClosePostApplyModal: async (status: boolean) => {
+      await updateConfig({
+        ...appConfig,
+        autoClosePostApplyModal: status,
+      })
     },
   }
 

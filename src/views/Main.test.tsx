@@ -22,6 +22,7 @@ const renderMainView = (deniedList: string[]) => {
           appConfig: initialAppConfig,
           appConfigActions: {
             setActiveStatus: async () => {},
+            setAutoClosePostApplyModal: async () => {},
           },
         }}
       >
@@ -56,6 +57,15 @@ beforeAll(() => {
 })
 
 describe('MainView', () => {
+  it('renders the extension and modal auto-close settings', () => {
+    renderMainView([])
+
+    expect(screen.getAllByRole('switch')).toHaveLength(2)
+    expect(
+      screen.getByText('Close the application modal automatically'),
+    ).toBeTruthy()
+  })
+
   it('renders all denied terms without a search query', () => {
     renderMainView(['React', 'Café'])
 

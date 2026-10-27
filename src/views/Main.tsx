@@ -109,6 +109,14 @@ export const MainView = () => {
           void appConfigActions.setActiveStatus(checked)
         }}
       />
+      <SettingRow
+        label={messages.autoClosePostApplyModal}
+        description={messages.autoClosePostApplyModalDescription}
+        checked={appConfig.autoClosePostApplyModal}
+        onChange={(checked) => {
+          void appConfigActions.setAutoClosePostApplyModal(checked)
+        }}
+      />
 
       <Flex
         vertical

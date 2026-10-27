@@ -11,6 +11,8 @@ export type Messages = {
   languageEn: string
   extensionActive: string
   extensionActiveDescription: string
+  autoClosePostApplyModal: string
+  autoClosePostApplyModalDescription: string
   deniedListSection: string
   newTermAction: string
   emptyDeniedList: string
@@ -35,6 +37,9 @@ const ptBR: Messages = {
   languageEn: 'English',
   extensionActive: 'Extensão ativa',
   extensionActiveDescription: 'Aplica a denied list na busca de vagas',
+  autoClosePostApplyModal: 'Fechar modal de candidatura automaticamente',
+  autoClosePostApplyModalDescription:
+    'Fecha automaticamente o modal exibido após enviar uma candidatura',
   deniedListSection: 'Denied list',
   newTermAction: 'Nova',
   emptyDeniedList: 'Nenhum termo na denied list',
@@ -61,6 +66,9 @@ const en: Messages = {
   languageEn: 'English',
   extensionActive: 'Extension active',
   extensionActiveDescription: 'Applies the denied list to the job search',
+  autoClosePostApplyModal: 'Close the application modal automatically',
+  autoClosePostApplyModalDescription:
+    'Automatically closes the modal shown after submitting an application',
   deniedListSection: 'Denied list',
   newTermAction: 'New',
   emptyDeniedList: 'No terms in the denied list',
